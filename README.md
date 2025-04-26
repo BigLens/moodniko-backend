@@ -40,7 +40,8 @@
 
 Create a .env file and fill in the following:
 
-   ```bash
+   ```
+
    DATABASE_URL=your-database-url
    JWT_SECRET=your-jwt-secret
 
@@ -49,7 +50,8 @@ Create a .env file and fill in the following:
     ```
     npm run start:dev
 
-Open your browser and go to:
+5. Open your browser and go to:
+
    ```bash
    http://localhost:4001.
 to see the backend in action
@@ -58,7 +60,7 @@ Endpoints:
 
    ```
 POST /auth/signup: Sign up a new user.
-   ```bash
+   ```
 POST /auth/signin: Sign in a user.
 
    ```
