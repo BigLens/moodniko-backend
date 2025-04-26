@@ -31,20 +31,23 @@
    git clone https://github.com/your-username/moodmate-backend.git
    cd moodmate-backend
 
-2. Install dependencies:
+2. **Install dependencies**:
 
-npm install
+   ```
+   npm install
 
-3. Set up environment variables:
+3. **Set up environment variables**:
 
 Create a .env file and fill in the following:
 
-DATABASE_URL=your-database-url
-JWT_SECRET=your-jwt-secret
+   ```
+   DATABASE_URL=your-database-url
+   JWT_SECRET=your-jwt-secret
 
-4. Run the application:
+4. **Run the application**:
 
-npm run start:dev
+    ```
+    npm run start:dev
 
 Open your browser and go to http://localhost:4001 to see the backend in action
 
