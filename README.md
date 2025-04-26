@@ -25,48 +25,32 @@
 
 ## **Installation**
 
-1. **Clone the repository**:
+```bash
+# Clone the repository
+git clone https://github.com/your-username/moodmate.git
+cd moodmate
 
-   ```bash
-   git clone https://github.com/your-username/moodmate-backend.git
-   cd moodmate-backend
+# Install dependencies
+npm install
 
-2. **Install dependencies**:
+# Set up environment variables
+# Create a .env file and fill in the following:
+# DATABASE_URL=your-database-url
+# JWT_SECRET=your-jwt-secret
 
-   ```
-   npm install
+# Run the application
+npm run start:dev
 
-3. **Set up environment variables**:
+# Open the browser and go to http://localhost:3000 to see the backend in action
 
-Create a .env file and fill in the following:
-
-   ```
-
-   DATABASE_URL=your-database-url
-   JWT_SECRET=your-jwt-secret
-
-4. **Run the application**:
-
-    ```
-    npm run start:dev
-
-5. Open your browser and go to:
-
-   ```bash
-   http://localhost:4001.
-to see the backend in action
-
-Endpoints:
-
-   ```
+## **Endpoints**
 POST /auth/signup: Sign up a new user.
-   ```
+
 POST /auth/signin: Sign in a user.
 
-   ```
 GET /mood: Get personalized content recommendations based on the user's mood.
 
-Contributing
+## **Contributing**
 
 If you'd like to contribute to this project, feel free to fork the repository, create a new branch, and submit a pull request. Here are some guidelines to follow:
 
