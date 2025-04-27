@@ -31,17 +31,17 @@ git clone https://github.com/your-username/moodmate.git
 
 2. **Install Dependencies**
 
-```bash
+```
 npm install
 
 3. **Set up environment variable**
 -create .env file at the root directory of the project
 - Add the following values:
 
-```bash
+```
 DATABASE_URL=your-database-url
 
-```bash
+```
 JWT_SECRET=your-jwt-secret
 
 4. **Run the application**
@@ -49,10 +49,9 @@ JWT_SECRET=your-jwt-secret
 ```bash
 npm run start:dev
 
-+ Open the browser and go to http://localhost:4001 to see the backend in action.
+Open the browser and go to http://localhost:4001 to see the backend in action.
 
 ---
-
 
 ## **Endpoints**
 
