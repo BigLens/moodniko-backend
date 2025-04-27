@@ -25,40 +25,42 @@
 
 ## **Installation**
 
-1. **Clone the repository**
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/your-username/moodmate.git
-
-2. **Install Dependencies**
 ```
-npm install
 
-3. **Set up environment variable**
--create .env file at the root directory of the project
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Set Up Environment Variables
+- Create a `.env` file at the root directory of the project.
 - Add the following values:
 
 ```
 DATABASE_URL=your-database-url
-
-```
 JWT_SECRET=your-jwt-secret
+```
 
-4. **Run the application**
-
+### 4. Run the Application
 ```bash
 npm run start:dev
+```
 
-Open the browser and go to http://localhost:4001 to see the backend in action.
+- Open the browser and go to `http://localhost:4001` to see the backend in action.
 
 ---
 
 ## **Endpoints**
 
-POST /auth/signup: Sign up a new user.
+### Authentication
+- **POST** `/auth/signup`: Sign up a new user.
+- **POST** `/auth/signin`: Sign in a user.
 
-POST /auth/signin: Sign in a user.
-
-GET /mood: Get personalized content recommendations based on the user's mood.
+### Mood
+- **GET** `/mood`: Get personalized content recommendations based on the user's mood.
 
 ---
 
@@ -66,8 +68,6 @@ GET /mood: Get personalized content recommendations based on the user's mood.
 
 If you'd like to contribute to this project, feel free to fork the repository, create a new branch, and submit a pull request. Here are some guidelines to follow:
 
-Write clean, maintainable code.
-
-Add tests for new features.
-
-Follow standard commit message conventions.
+1. Write clean, maintainable code.
+2. Add tests for new features.
+3. Follow standard commit message conventions.
