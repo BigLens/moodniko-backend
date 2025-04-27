@@ -30,7 +30,6 @@
 git clone https://github.com/your-username/moodmate.git
 
 2. **Install Dependencies**
-
 ```
 npm install
 
