@@ -1,25 +1,32 @@
 import { NamingStrategyInterface, DefaultNamingStrategy } from 'typeorm';
 import { camelToSnakeCase } from './utils';
 
-export class SnakeNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
-
-  columnName(propertyName: string, customName: string | undefined, embeddedPrefixes: string[]): string {
+export class SnakeNamingStrategy
+  extends DefaultNamingStrategy
+  implements NamingStrategyInterface
+{
+  columnName(
+    propertyName: string,
+    customName: string | undefined,
+    embeddedPrefixes: string[],
+  ): string {
     return camelToSnakeCase(customName ? customName : propertyName);
   }
 
-  
   tableName(targetName: string, userSpecifiedName: string | undefined): string {
     return camelToSnakeCase(userSpecifiedName ? userSpecifiedName : targetName);
   }
 
   joinColumnName(propertyName: string, referencedTableName: string): string {
-    return camelToSnakeCase(propertyName) + "_id";
+    return camelToSnakeCase(propertyName) + '_id';
   }
 
   joinTableName(firstTableName: string, secondTableName: string): string {
-    return camelToSnakeCase(firstTableName) + "_" + camelToSnakeCase(secondTableName);
+    return (
+      camelToSnakeCase(firstTableName) + '_' + camelToSnakeCase(secondTableName)
+    );
   }
-  
+
   relationName(propertyName: string): string {
     return camelToSnakeCase(propertyName);
   }
