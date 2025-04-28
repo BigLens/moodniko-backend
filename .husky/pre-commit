@@ -1,0 +1,22 @@
+# Directories to skip, separated by "|"
+skip_dirs=".husky|.github|.vscode"
+
+# Get the list of committed files (only files that are changed)
+CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r HEAD)
+
+# Log the changed files
+echo "[HUSKY]: Changed files: $CHANGED_FILES"
+
+# Function to check if a directory is present in the list of changed files
+has_changed_directory() {
+  echo "$CHANGED_FILES" | grep -qE "$1/"
+}
+
+# Check if any committed files are outside the skip_dirs
+if echo "$CHANGED_FILES" | grep -qvE "($skip_dirs)/"; then
+    echo "[HUSKY]: Running npm test for changed files..."
+    # Run tests only on changed files
+    run_scripts "." "test"
+else
+    echo "[HUSKY]: Skipped npm test because changes are in excluded directories."
+fi
