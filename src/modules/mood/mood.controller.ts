@@ -1,20 +1,20 @@
-import { Controller, Post, Get, Body, Req } from '@nestjs/common';
-import { MoodService } from './mood.service';
-import { MoodDto } from './dto/mood.dto'
+import { Controller, Post, Get, Body} from '@nestjs/common';
+import { MoodService } from '@modules/mood/mood.service';
+import { MoodDto } from '@modules/mood/dto/mood.dto';
 
-@Controller('mood')
+@Controller('moods')
 export class MoodController {
 	constructor(
 		private moodService: MoodService
 	){}
 
-	@Post()
+	@Post('/create-mood')
 	async createMood(@Body() dto:MoodDto) {
-		return await this.moodService.createMood(dto)
+		return this.moodService.createMood(dto)
 	}
 
-	@Get()
-	async findAllMoods(Req() feeling: string) {
-	return await this.moodService.findAll(feeling)	
+	@Get('get-moods')
+	async findAllMood() {
+		return this.moodService.findAllMood
 	}
 }

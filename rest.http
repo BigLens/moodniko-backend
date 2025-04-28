@@ -1,0 +1,11 @@
+### create a feeling
+POST http://localhost:4002/moods/create-mood
+Content-Type: application/json
+
+{
+  "feeling": "mmody"
+}
+
+### get all moods
+GET http://localhost:4002/moods/get-moods
+Content-Type: application/json

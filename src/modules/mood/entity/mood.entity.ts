@@ -1,7 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column}
-import { BaseEntity } from '../../../entities/base-entity'
+import { Entity, PrimaryGeneratedColumn, Column} from 'typeorm'
+import { BaseEntity }  from 'src/entities/base-entity'
 
-@Entity()
+@Entity('moods')
 export class MoodEntity extends BaseEntity{
 	@PrimaryGeneratedColumn()
 	id: number
