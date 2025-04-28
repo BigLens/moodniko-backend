@@ -5,8 +5,8 @@ import { MoodEntity } from '@modules/mood/entity/mood.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([MoodEntity])],
-	controllers: [MoodController],
-	providers: [MoodService]
+  imports: [TypeOrmModule.forFeature([MoodEntity])],
+  controllers: [MoodController],
+  providers: [MoodService],
 })
 export class MoodModule {}

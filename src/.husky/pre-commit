@@ -1,0 +1,13 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Check if any files are staged outside of skip_dirs
+CHANGED_FILES=$(git diff --cached --name-only)
+
+if echo "$CHANGED_FILES" | grep -qvE "($skip_dirs)/"; then
+    echo "[HUSKY]: Running tests for modified files..."
+    # Run related tests using Jest or Mocha for only the changed files
+    npx jest --findRelatedTests $(echo "$CHANGED_FILES" | grep '\.ts$')
+else
+    echo "[HUSKY]: Skipped tests because changes are in excluded directories."
+fi

@@ -8,7 +8,6 @@ export class SnakeNamingStrategy
   columnName(
     propertyName: string,
     customName: string | undefined,
-    embeddedPrefixes: string[],
   ): string {
     return camelToSnakeCase(customName ? customName : propertyName);
   }
@@ -17,7 +16,7 @@ export class SnakeNamingStrategy
     return camelToSnakeCase(userSpecifiedName ? userSpecifiedName : targetName);
   }
 
-  joinColumnName(propertyName: string, referencedTableName: string): string {
+  joinColumnName(propertyName: string): string {
     return camelToSnakeCase(propertyName) + '_id';
   }
 

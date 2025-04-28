@@ -3,7 +3,7 @@ POST http://localhost:4002/moods/create-mood
 Content-Type: application/json
 
 {
-  "feeling": "mmody"
+  "feeling": "happy"
 }
 
 ### get all moods
