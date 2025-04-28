@@ -24,7 +24,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky install",
-     "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -54,7 +54,7 @@
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.6",
-    "husky": "^8.0.3",
+    "husky": "^8.0.0",
     "jest": "^29.7.0",
     "lint-staged": "^15.5.1",
     "prettier": "^3.0.0",
