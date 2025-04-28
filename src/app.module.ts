@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import dataSource from './database/data-source';
 import { MoodModule } from '@modules/mood/mood.module';
+import { ContentsModule } from '@modules/contents/contents.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -20,6 +21,6 @@ TypeOrmModule.forRootAsync({
     return dataSource;
   }
 }),
-MoodModule]
+MoodModule, ContentsModule]
 })
 export class AppModule {}
