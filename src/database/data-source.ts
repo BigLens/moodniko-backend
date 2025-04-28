@@ -1,6 +1,7 @@
 import {DataSource} from 'typeorm';
 import { config } from 'dotenv';
 import { globSync } from 'glob';
+import { SnakeNamingStrategy } from '@utils/snake_snake';
 
 config({path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env'});
 
@@ -13,6 +14,7 @@ const dataSource = new DataSource({
     database: process.env.DB_NAME,
     synchronize: false,
     entities:  globSync(process.env.DB_ENTITIES || 'src/**/*.entity.{ts,js}'),
+    namingStrategy: new SnakeNamingStrategy(),
     migrations:  globSync(
         process.env.DB_MIGRATIONS || 'src/database/migrations/*.{ts,js}',
       ),
