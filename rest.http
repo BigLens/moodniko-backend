@@ -15,7 +15,7 @@ GET http://localhost:4002/moods/2
 Content-Type: application/json
 
 ### update a mood by id
-PATCH http://localhost:4002/moods/2
+PATCH http://localhost:4002/moods/3
 Content-Type: application/json
 
 {
