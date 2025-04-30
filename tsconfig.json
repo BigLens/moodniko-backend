@@ -18,9 +18,17 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "@decorators/*": ["src/decorators/*"],
+      "@database/*": ["src/database/*"],
+      "@entities/*": ["src/entities/*"],
       "@modules/*": ["src/modules/*"],
-      "@common/*": ["src/common/*"],
+      "@shared/*": ["src/shared/*"],
+      "@guards/*": ["src/guards/*"],
+      "@helpers/*": ["src/helpers/*"],
+      "@config/*": ["src/config/*"],
       "@utils/*": ["src/utils/*"],
+      "@types/*": ["src/types/*"]
     },
+    "typeRoots": ["node_modules/@types","src/types/*",]
   }
 }

@@ -81,6 +81,18 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@shared/(.*)$": "<rootDir>/shared/$1",
+      "^@modules/(.*)$": "<rootDir>/modules/$1",
+      "^@decorators/(.*)$": "<rootDir>/decorators/$1",
+      "^@database/(.*)$": "<rootDir>/database/$1",
+      "^@entities/(.*)$": "<rootDir>/entities/$1",
+      "^@guards/(.*)$": "<rootDir>/guards/$1",
+      "^@helpers/(.*)$": "<rootDir>/helpers/$1",
+      "^@config/(.*)$": "<rootDir>/config/$1",
+      "^@utils/(.*)$": "<rootDir>/utils/$1",
+      "^@types/(.*)$": "<rootDir>/types/$1"
+    }
   }
 }
