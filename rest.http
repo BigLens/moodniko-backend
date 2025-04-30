@@ -7,5 +7,21 @@ Content-Type: application/json
 }
 
 ### get all moods
-GET http://localhost:4002/moods/get-moods
+GET http://localhost:4002/moods
+Content-Type: application/json
+
+### get a mood by id
+GET http://localhost:4002/moods/2
+Content-Type: application/json
+
+### update a mood by id
+PATCH http://localhost:4002/moods/2
+Content-Type: application/json
+
+{
+  "feeling": "sad"
+}
+
+### delete a mood by id
+DELETE http://localhost:4002/moods/2
 Content-Type: application/json
