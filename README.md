@@ -27,7 +27,7 @@
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/moodmate.git
+git clone https://github.com/your-username/moodmate-backend.git
 ```
 
 ### 2. Install Dependencies
@@ -49,7 +49,7 @@ JWT_SECRET=your-jwt-secret
 npm run start:dev
 ```
 
-- Open the browser and go to `http://localhost:4001` to see the backend in action.
+- Open the browser and go to `http://localhost:4002` to see the backend in action.
 
 ---
 
