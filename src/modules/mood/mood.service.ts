@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { MoodDto } from '@modules/mood/dto/mood.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,7 +20,28 @@ export class MoodService {
   }
 
   async findAllMood(): Promise<MoodEntity[]> {
-    const findMoods = await this.moodRepo.find();
-    return findMoods;
+    return await this.moodRepo.find();
+  }
+
+  async findMoodById(id: number): Promise<MoodEntity> {
+    const mood = await this.moodRepo.findOne({where: { id }});
+    if (!mood) {
+      throw new NotFoundException('Mood not found');
+    }
+    return mood;
+  }
+
+  async updateMood(id: number, dto: MoodDto): Promise<MoodEntity> {
+    const mood = await this.findMoodById(id);
+    mood.feeling = dto.feeling;
+    return await this.moodRepo.save(mood);
+  }
+
+  async deleteMood(id: number): Promise<{ message: string }> {
+    const mood = await this.moodRepo.delete(id);
+    if (!mood.affected) {
+      throw new NotFoundException('Mood not found');
+    }
+    return { message: 'Mood deleted successfully' };
   }
 }
