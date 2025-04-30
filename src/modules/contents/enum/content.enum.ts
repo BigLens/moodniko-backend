@@ -1,5 +1,5 @@
 export enum ContentType {
-    MOVIE = 'movie',
-    MUSIC = 'music',
-    PODCAST = 'podcast',
+  MOVIE = 'movie',
+  MUSIC = 'music',
+  PODCAST = 'podcast',
 }
