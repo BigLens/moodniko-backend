@@ -5,10 +5,7 @@ export class SnakeNamingStrategy
   extends DefaultNamingStrategy
   implements NamingStrategyInterface
 {
-  columnName(
-    propertyName: string,
-    customName: string | undefined,
-  ): string {
+  columnName(propertyName: string, customName: string | undefined): string {
     return camelToSnakeCase(customName ? customName : propertyName);
   }
 

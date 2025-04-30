@@ -1,4 +1,12 @@
-import { Controller, Post, Get, Body, Param, Patch, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Param,
+  Patch,
+  Delete,
+} from '@nestjs/common';
 import { MoodService } from '@modules/mood/mood.service';
 import { MoodDto } from '@modules/mood/dto/mood.dto';
 

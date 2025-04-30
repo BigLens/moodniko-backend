@@ -24,7 +24,7 @@ export class MoodService {
   }
 
   async findMoodById(id: number): Promise<MoodEntity> {
-    const mood = await this.moodRepo.findOne({where: { id }});
+    const mood = await this.moodRepo.findOne({ where: { id } });
     if (!mood) {
       throw new NotFoundException('Mood not found');
     }
