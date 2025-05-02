@@ -37,12 +37,11 @@ npm install
 
 ### 3. Set Up Environment Variables
 - Create a `.env` file at the root directory of the project.
-- Add the following values:
 
 ```
-DATABASE_URL=your-database-url
-JWT_SECRET=your-jwt-secret
+cp .env.example .env
 ```
+- Fill in the appropriate values in the `.env` file. You will need to set up your PostgreSQL database and provide the connection details.
 
 ### 4. Run the Application
 ```bash
