@@ -1,6 +1,8 @@
 import { BaseEntity } from '@entities/base-entity';
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { ContentType } from '@modules/contents/enum/content.enum';
 
+@Entity()
 export class ContentEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -14,8 +16,8 @@ export class ContentEntity extends BaseEntity {
   @Column({ nullable: true })
   description: string;
 
-  @Column({ nullable: true })
-  type: 'movie' | 'music' | 'podcast';
+  @Column({ type: 'enum', enum: ContentType })
+  type: ContentType;
 
   @Column({ nullable: true })
   moodtag: string;
