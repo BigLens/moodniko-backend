@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ContentType } from './enum/content.enum';
-import { ContentEntity } from './model/content.entity';
+import { ContentType } from '@modules/contents/enum/content.enum';
+import { ContentEntity } from '@modules/contents/model/content.entity';
 
 @Injectable()
 export class ContentsService {
