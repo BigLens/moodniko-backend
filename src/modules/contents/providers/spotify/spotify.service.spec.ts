@@ -109,7 +109,7 @@ describe('SpotifyService', () => {
     });
   });
 
-  describe('searchMusic', () => {
+  describe('searchContent', () => {
     it('should return music tracks successfully', async () => {
       mockHttpService.get.mockReturnValue(
         of({
@@ -121,37 +121,11 @@ describe('SpotifyService', () => {
         }),
       );
 
-      const tracks = await service['searchMusic']('test query');
+      const tracks = await service['searchContent']('test query', 'track');
       expect(tracks).toHaveLength(1);
       expect(tracks[0]).toEqual(mockSpotifyTrack);
     });
 
-    it('should return empty array if no tracks found', async () => {
-      mockHttpService.get.mockReturnValue(
-        of({
-          data: {
-            tracks: {
-              items: [],
-            },
-          },
-        }),
-      );
-
-      const tracks = await service['searchMusic']('test query');
-      expect(tracks).toHaveLength(0);
-    });
-
-    it('should handle API errors gracefully', async () => {
-      mockHttpService.get.mockReturnValue(
-        throwError(() => new Error('API error')),
-      );
-
-      const tracks = await service['searchMusic']('test query');
-      expect(tracks).toHaveLength(0);
-    });
-  });
-
-  describe('searchPodcasts', () => {
     it('should return podcasts successfully', async () => {
       mockHttpService.get.mockReturnValue(
         of({
@@ -163,15 +137,18 @@ describe('SpotifyService', () => {
         }),
       );
 
-      const podcasts = await service['searchPodcasts']('test query');
+      const podcasts = await service['searchContent']('test query', 'show');
       expect(podcasts).toHaveLength(1);
       expect(podcasts[0]).toEqual(mockSpotifyPodcast);
     });
 
-    it('should return empty array if no podcasts found', async () => {
+    it('should return empty array if no content found', async () => {
       mockHttpService.get.mockReturnValue(
         of({
           data: {
+            tracks: {
+              items: [],
+            },
             shows: {
               items: [],
             },
@@ -179,7 +156,9 @@ describe('SpotifyService', () => {
         }),
       );
 
-      const podcasts = await service['searchPodcasts']('test query');
+      const tracks = await service['searchContent']('test query', 'track');
+      const podcasts = await service['searchContent']('test query', 'show');
+      expect(tracks).toHaveLength(0);
       expect(podcasts).toHaveLength(0);
     });
 
@@ -188,7 +167,9 @@ describe('SpotifyService', () => {
         throwError(() => new Error('API error')),
       );
 
-      const podcasts = await service['searchPodcasts']('test query');
+      const tracks = await service['searchContent']('test query', 'track');
+      const podcasts = await service['searchContent']('test query', 'show');
+      expect(tracks).toHaveLength(0);
       expect(podcasts).toHaveLength(0);
     });
   });
