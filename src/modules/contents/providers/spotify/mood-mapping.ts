@@ -3,101 +3,57 @@ export const moodToGenreMap: Record<
   { genres: string[]; effect: string }
 > = {
   happy: {
-    genres: ['happy', 'pop', 'dance', 'disco', 'summer', 'party'],
+    genres: ['pop', 'dance', 'disco'],
     effect: 'energetic',
   },
   sad: {
-    genres: [
-      'uplifting',
-      'inspirational',
-      'motivational',
-      'positive',
-      'self-help',
-      'mental-health',
-    ],
+    genres: ['indie', 'pop', 'folk'],
     effect: 'moderate',
   },
   angry: {
-    genres: [
-      'calm',
-      'meditation',
-      'ambient',
-      'nature',
-      'classical',
-      'mindfulness',
-    ],
+    genres: ['classical', 'ambient', 'jazz'],
     effect: 'calm',
   },
   anxious: {
-    genres: [
-      'ambient',
-      'classical',
-      'meditation',
-      'nature',
-      'sleep',
-      'relaxation',
-    ],
+    genres: ['ambient', 'classical', 'jazz'],
     effect: 'calm',
   },
   excited: {
-    genres: ['electronic', 'dance', 'house', 'techno', 'party', 'work-out'],
+    genres: ['electronic', 'dance', 'house'],
     effect: 'energetic',
   },
   relaxed: {
-    genres: ['jazz', 'lofi', 'chill', 'ambient', 'meditation', 'nature'],
+    genres: ['jazz', 'ambient', 'classical'],
     effect: 'calm',
   },
   romantic: {
-    genres: ['romance', 'r-n-b', 'soul', 'love', 'romantic', 'ballad'],
+    genres: ['r-n-b', 'soul', 'pop'],
     effect: 'moderate',
   },
   nostalgic: {
-    genres: ['classic', 'retro', 'oldies', 'folk', 'nostalgia', 'vintage'],
+    genres: ['rock', 'pop', 'indie'],
     effect: 'moderate',
   },
   focused: {
-    genres: [
-      'focus',
-      'classical',
-      'instrumental',
-      'ambient',
-      'study',
-      'concentration',
-    ],
+    genres: ['classical', 'ambient', 'jazz'],
     effect: 'moderate',
   },
   energetic: {
-    genres: [
-      'work-out',
-      'electronic',
-      'dance',
-      'rock',
-      'fitness',
-      'motivation',
-    ],
+    genres: ['electronic', 'dance', 'rock'],
     effect: 'energetic',
   },
 };
 
 export const emotionalImpactParams: Record<string, Record<string, number>> = {
   energetic: {
-    min_energy: 0.7,
-    min_valence: 0.6,
-    min_popularity: 50,
+    min_energy: 0.6,
+    min_valence: 0.5,
   },
   calm: {
-    max_energy: 0.4,
-    max_tempo: 100,
-    min_popularity: 30,
-  },
-  intense: {
-    min_energy: 0.8,
-    min_loudness: -10,
-    min_popularity: 40,
+    max_energy: 0.5,
   },
   moderate: {
-    min_energy: 0.4,
+    min_energy: 0.3,
     max_energy: 0.7,
-    min_popularity: 30,
   },
 };

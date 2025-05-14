@@ -54,3 +54,12 @@ export interface SpotifySearchResponse {
     items: SpotifyPodcast[];
   };
 }
+
+export interface SpotifyRecommendationsResponse {
+  tracks: SpotifyTrack[];
+  seeds: {
+    id: string;
+    type: string;
+    href: string;
+  }[];
+}
