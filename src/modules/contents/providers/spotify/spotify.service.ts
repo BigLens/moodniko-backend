@@ -21,15 +21,12 @@ export class SpotifyService {
   private readonly SPOTIFY_API_URL = 'https://api.spotify.com/v1';
   private readonly AUTH_URL = 'https://accounts.spotify.com/api/token';
   private readonly SEARCH_URL = `${this.SPOTIFY_API_URL}/search`;
-  private readonly RECOMMENDATIONS_URL = `${this.SPOTIFY_API_URL}/recommendations`;
 
   private readonly cache = new Map<
     string,
     { data: ContentEntity[]; timestamp: number }
   >();
   private readonly CACHE_TTL = 3600000;
-  private readonly MAX_RETRIES = 2;
-  private readonly RETRY_DELAY = 1000;
   private readonly REQUEST_TIMEOUT = 8000;
   private readonly RATE_LIMIT_DELAY = 1000;
 
@@ -39,18 +36,14 @@ export class SpotifyService {
 
   constructor(private readonly http: HttpService) {}
 
-  private async delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   private async enforceRateLimit(): Promise<void> {
     const now = Date.now();
     const timeSinceLastRequest = now - this.lastRequestTime;
-
     if (timeSinceLastRequest < this.RATE_LIMIT_DELAY) {
-      await this.delay(this.RATE_LIMIT_DELAY - timeSinceLastRequest);
+      await new Promise((resolve) =>
+        setTimeout(resolve, this.RATE_LIMIT_DELAY - timeSinceLastRequest),
+      );
     }
-
     this.lastRequestTime = Date.now();
   }
 
@@ -98,15 +91,16 @@ export class SpotifyService {
     }
   }
 
-  private async searchMusic(
+  private async searchContent(
     query: string,
+    type: 'track' | 'show',
     limit: number = 20,
-  ): Promise<SpotifyTrack[]> {
+  ): Promise<SpotifyTrack[] | SpotifyPodcast[]> {
     await this.enforceRateLimit();
     const accessToken = await this.getAccessToken();
     const params = {
       q: query,
-      type: 'track',
+      type,
       limit,
     };
 
@@ -122,40 +116,13 @@ export class SpotifyService {
           .pipe(timeout(this.REQUEST_TIMEOUT)),
       );
 
-      return data.tracks?.items || [];
+      if (type === 'track') {
+        return data.tracks?.items || [];
+      } else {
+        return data.shows?.items || [];
+      }
     } catch (error) {
-      console.error('Error searching music:', error.message);
-      return [];
-    }
-  }
-
-  private async searchPodcasts(
-    query: string,
-    limit: number = 20,
-  ): Promise<SpotifyPodcast[]> {
-    await this.enforceRateLimit();
-    const accessToken = await this.getAccessToken();
-    const params = {
-      q: query,
-      type: 'show',
-      limit,
-    };
-
-    try {
-      const { data } = await firstValueFrom(
-        this.http
-          .get<SpotifySearchResponse>(this.SEARCH_URL, {
-            params,
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          })
-          .pipe(timeout(this.REQUEST_TIMEOUT)),
-      );
-
-      return data.shows?.items || [];
-    } catch (error) {
-      console.error('Error searching podcasts:', error.message);
+      console.error(`Error searching ${type}:`, error.message);
       return [];
     }
   }
@@ -179,20 +146,20 @@ export class SpotifyService {
 
     const moodConfig = moodToGenreMap[normalizedMood];
     if (!moodConfig) {
-      console.log(`No mapping found for mood: ${mood}`);
       return [];
     }
 
     try {
       const { genres } = moodConfig;
       const content: ContentEntity[] = [];
+      const searchQuery = genres.join(' ');
 
       // Fetch music if requested or if no specific content type is specified
       if (!contentType || contentType === ContentType.MUSIC) {
-        const musicQuery = genres
-          .map((genre) => `${genre} ${normalizedMood}`)
-          .join(' OR ');
-        const tracks = await this.searchMusic(musicQuery);
+        const tracks = (await this.searchContent(
+          searchQuery,
+          'track',
+        )) as SpotifyTrack[];
         content.push(
           ...tracks.map((track) =>
             mapToContentEntity(track, ContentType.MUSIC, normalizedMood),
@@ -202,10 +169,10 @@ export class SpotifyService {
 
       // Fetch podcasts if requested or if no specific content type is specified
       if (!contentType || contentType === ContentType.PODCAST) {
-        const podcastQuery = genres
-          .map((genre) => `${genre} ${normalizedMood}`)
-          .join(' OR ');
-        const podcasts = await this.searchPodcasts(podcastQuery);
+        const podcasts = (await this.searchContent(
+          searchQuery,
+          'show',
+        )) as SpotifyPodcast[];
         content.push(
           ...podcasts.map((podcast) =>
             mapToContentEntity(podcast, ContentType.PODCAST, normalizedMood),
