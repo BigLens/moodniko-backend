@@ -10,7 +10,6 @@ import {
 
 describe('SpotifyService', () => {
   let service: SpotifyService;
-  let httpService: HttpService;
 
   const mockHttpService = {
     post: jest.fn(),
@@ -70,14 +69,11 @@ describe('SpotifyService', () => {
     }).compile();
 
     service = module.get<SpotifyService>(SpotifyService);
-    httpService = module.get<HttpService>(HttpService);
 
-    // Reset all mocks before each test
     jest.clearAllMocks();
   });
 
   afterEach(() => {
-    // Clean up environment variables after each test
     delete process.env.SPOTIFY_CLIENT_ID;
     delete process.env.SPOTIFY_CLIENT_SECRET;
   });
