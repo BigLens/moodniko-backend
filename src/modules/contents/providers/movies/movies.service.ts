@@ -19,10 +19,10 @@ export class MoviesService {
     string,
     { data: ContentEntity[]; timestamp: number }
   >();
-  private readonly CACHE_TTL = 3600000; // 1 hour in milliseconds
-  private readonly MAX_RETRIES = 2; // Reduced retries
-  private readonly RETRY_DELAY = 1000; // 1 second
-  private readonly REQUEST_TIMEOUT = 8000; // 8 seconds timeout
+  private readonly CACHE_TTL = 3600000;
+  private readonly MAX_RETRIES = 2;
+  private readonly RETRY_DELAY = 1000;
+  private readonly REQUEST_TIMEOUT = 8000;
 
   constructor(private readonly http: HttpService) {}
 
