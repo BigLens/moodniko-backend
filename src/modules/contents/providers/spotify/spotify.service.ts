@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { firstValueFrom, timeout, catchError } from 'rxjs';
+import { firstValueFrom, timeout } from 'rxjs';
 import { ContentEntity } from '@modules/contents/model/content.entity';
 import { ContentType } from '@modules/contents/enum/content.enum';
 import { mapToContentEntity } from './spotify.mapper';
@@ -14,7 +14,7 @@ import {
   SpotifyAuthResponse,
   SpotifySearchResponse,
 } from './interface/spotify.interface';
-import { moodToGenreMap, emotionalImpactParams } from './mood-mapping';
+import { moodToGenreMap } from './mood-mapping';
 
 @Injectable()
 export class SpotifyService {
@@ -27,11 +27,11 @@ export class SpotifyService {
     string,
     { data: ContentEntity[]; timestamp: number }
   >();
-  private readonly CACHE_TTL = 3600000; // 1 hour
+  private readonly CACHE_TTL = 3600000;
   private readonly MAX_RETRIES = 2;
   private readonly RETRY_DELAY = 1000;
   private readonly REQUEST_TIMEOUT = 8000;
-  private readonly RATE_LIMIT_DELAY = 1000; // 1 second between requests
+  private readonly RATE_LIMIT_DELAY = 1000;
 
   private accessToken: string | null = null;
   private tokenExpiry: number = 0;
@@ -55,10 +55,7 @@ export class SpotifyService {
   }
 
   private async getAccessToken(): Promise<string> {
-    if (
-      this.accessToken &&
-      this.tokenExpiry > Date.now() + 60000 // Buffer of 1 minute
-    ) {
+    if (this.accessToken && this.tokenExpiry > Date.now() + 60000) {
       return this.accessToken;
     }
 
@@ -187,7 +184,7 @@ export class SpotifyService {
     }
 
     try {
-      const { genres, effect } = moodConfig;
+      const { genres } = moodConfig;
       const content: ContentEntity[] = [];
 
       // Fetch music if requested or if no specific content type is specified
