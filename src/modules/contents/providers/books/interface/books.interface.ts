@@ -20,5 +20,5 @@ export interface GoogleBook {
 export interface GoogleBooksResponse {
   kind: string;
   totalItems: number;
-  items?: GoogleBook[];
+  items?: GoogleBook[]; //items are optional
 }
