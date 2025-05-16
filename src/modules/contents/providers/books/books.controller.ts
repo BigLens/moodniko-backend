@@ -6,7 +6,7 @@ import { ContentEntity } from '@modules/contents/model/content.entity';
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
-  @Get()
+  @Get('mood')
   async getBooksByMood(@Query('mood') mood: string): Promise<ContentEntity[]> {
     return this.booksService.fetchBooksByMood(mood);
   }
