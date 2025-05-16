@@ -30,3 +30,4 @@ export const moodToGenreMap: Record<string, { genres: string[] }> = {
     genres: ['meditation', 'mindfulness', 'spirituality', 'nature'],
   },
 };
+//mappers
