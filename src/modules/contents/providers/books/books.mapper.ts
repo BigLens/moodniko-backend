@@ -20,5 +20,5 @@ export function mapToContentEntity(
   entity.type = type;
   entity.moodtag = mood;
 
-  return entity;
+  return entity; // Return the mapped entity
 }
