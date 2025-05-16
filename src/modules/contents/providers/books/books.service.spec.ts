@@ -8,6 +8,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 
+// Mocking the ContentEntity class
 describe('BooksService', () => {
   let service: BooksService;
 
