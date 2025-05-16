@@ -25,6 +25,7 @@ export class BooksService {
 
   constructor(private readonly http: HttpService) {}
 
+  //function to fetch books based on mood
   async fetchBooksByMood(mood: string): Promise<ContentEntity[]> {
     if (!mood?.trim()) {
       throw new BadRequestException('Mood parameter is required');
