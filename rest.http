@@ -25,3 +25,8 @@ Content-Type: application/json
 ### delete a mood by id
 DELETE http://localhost:4002/moods/2
 Content-Type: application/json
+
+### get mood with a specific feeling
+
+GET http://localhost:4002/movies?mood=joy
+Content-Type: application/json
