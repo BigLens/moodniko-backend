@@ -3,7 +3,7 @@ import { ContentType } from '@modules/contents/enum/content.enum';
 import { ContentEntity } from '@modules/contents/model/content.entity';
 import { MoviesService } from './providers/movies/movies.service';
 import { SpotifyService } from './providers/spotify/spotify.service';
-import { BooksService } from '@modules/contents/providers/books/books.service';
+import { BooksService } from './providers/books/books.service';
 
 @Injectable()
 export class ContentsService {
