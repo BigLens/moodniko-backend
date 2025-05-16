@@ -3,12 +3,14 @@ import { ContentType } from '@modules/contents/enum/content.enum';
 import { ContentEntity } from '@modules/contents/model/content.entity';
 import { MoviesService } from './providers/movies/movies.service';
 import { SpotifyService } from './providers/spotify/spotify.service';
+import { BooksService } from './providers/books/books.service';
 
 @Injectable()
 export class ContentsService {
   constructor(
     private moviesService: MoviesService,
     private spotifyService: SpotifyService,
+    private booksService: BooksService,
   ) {}
 
   async getContentsByMood(
@@ -20,7 +22,7 @@ export class ContentsService {
     } else if (type === ContentType.MUSIC || type === ContentType.PODCAST) {
       return await this.spotifyService.fetchContentByMood(mood, type);
     } else if (type === ContentType.BOOK) {
-      return [];
+      return await this.booksService.fetchBooksByMood(mood);
     } else throw new Error(`Invalid content type: ${type}`);
   }
 }
