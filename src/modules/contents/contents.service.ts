@@ -22,7 +22,7 @@ export class ContentsService {
     } else if (type === ContentType.MUSIC || type === ContentType.PODCAST) {
       return await this.spotifyService.fetchContentByMood(mood, type);
     } else if (type === ContentType.BOOK) {
-      return await this.booksService.fetchBooksByMood(mood);
+      return await this.booksService.fetchBooksByMood(mood); // Assuming this method exists in BooksService
     } else throw new Error(`Invalid content type: ${type}`);
   }
 }
