@@ -6,6 +6,7 @@ import { SpotifyModule } from '@modules/contents/providers/spotify/spotify.modul
 import { BooksModule } from '@modules/contents/providers/books/books.module';
 
 @Module({
+  // Importing the necessary modules for the ContentsModule
   imports: [MoviesModule, SpotifyModule, BooksModule],
   providers: [ContentsService],
   controllers: [ContentsController],
