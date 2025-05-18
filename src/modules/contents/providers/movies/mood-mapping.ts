@@ -36,7 +36,7 @@ export const moodToGenreMap: Record<
     effect: 'energizing',
   },
   inspired: {
-    genres: [TMDB_GENRES.DRAMA, TMDB_GENRES.DOCUMENTARY, TMDB_GENRES.HISTORY],
+    genres: [TMDB_GENRES.DRAMA, TMDB_GENRES.FAMILY, TMDB_GENRES.COMEDY],
     effect: 'motivating',
   },
   peaceful: {
@@ -44,21 +44,21 @@ export const moodToGenreMap: Record<
     effect: 'calming',
   },
 
-  // Negative moods
+  // Negative moods - mapped to genres that help achieve better emotional state
   sad: {
-    genres: [TMDB_GENRES.COMEDY, TMDB_GENRES.FAMILY, TMDB_GENRES.DRAMA],
-    effect: 'comforting',
+    genres: [TMDB_GENRES.COMEDY, TMDB_GENRES.FAMILY, TMDB_GENRES.MUSIC],
+    effect: 'uplifting',
   },
   moody: {
-    genres: [TMDB_GENRES.DRAMA, TMDB_GENRES.MYSTERY, TMDB_GENRES.THRILLER],
-    effect: 'reflective',
+    genres: [TMDB_GENRES.COMEDY, TMDB_GENRES.FAMILY, TMDB_GENRES.MUSIC],
+    effect: 'uplifting',
   },
   anxious: {
-    genres: [TMDB_GENRES.ANIMATION, TMDB_GENRES.FANTASY, TMDB_GENRES.DRAMA],
+    genres: [TMDB_GENRES.ANIMATION, TMDB_GENRES.FAMILY, TMDB_GENRES.COMEDY],
     effect: 'calming',
   },
   stressed: {
-    genres: [TMDB_GENRES.COMEDY, TMDB_GENRES.ANIMATION, TMDB_GENRES.FANTASY],
+    genres: [TMDB_GENRES.ANIMATION, TMDB_GENRES.FAMILY, TMDB_GENRES.COMEDY],
     effect: 'relaxing',
   },
   bored: {
@@ -70,24 +70,20 @@ export const moodToGenreMap: Record<
     effect: 'connecting',
   },
   angry: {
-    genres: [TMDB_GENRES.ACTION, TMDB_GENRES.COMEDY, TMDB_GENRES.MUSIC],
-    effect: 'releasing',
+    genres: [TMDB_GENRES.ANIMATION, TMDB_GENRES.FAMILY, TMDB_GENRES.COMEDY],
+    effect: 'calming',
   },
   tired: {
     genres: [TMDB_GENRES.ANIMATION, TMDB_GENRES.COMEDY, TMDB_GENRES.FANTASY],
     effect: 'relaxing',
   },
   confused: {
-    genres: [
-      TMDB_GENRES.DRAMA,
-      TMDB_GENRES.MYSTERY,
-      TMDB_GENRES.SCIENCE_FICTION,
-    ],
+    genres: [TMDB_GENRES.COMEDY, TMDB_GENRES.FAMILY, TMDB_GENRES.DRAMA],
     effect: 'clarifying',
   },
   scared: {
-    genres: [TMDB_GENRES.HORROR, TMDB_GENRES.THRILLER, TMDB_GENRES.MYSTERY],
-    effect: 'thrilling',
+    genres: [TMDB_GENRES.COMEDY, TMDB_GENRES.FAMILY, TMDB_GENRES.ANIMATION],
+    effect: 'comforting',
   },
 };
 
@@ -95,74 +91,74 @@ export const moodToGenreMap: Record<
 export const emotionalImpactParams: Record<string, any> = {
   uplifting: {
     sort_by: 'popularity.desc',
-    'vote_average.gte': 6.5,
-    'vote_count.gte': 500,
+    'vote_average.gte': 6.0,
+    'vote_count.gte': 300,
     with_original_language: 'en',
   },
   energizing: {
     sort_by: 'popularity.desc',
-    'vote_average.gte': 6.5,
-    'vote_count.gte': 500,
+    'vote_average.gte': 6.0,
+    'vote_count.gte': 300,
     with_original_language: 'en',
   },
   motivating: {
-    sort_by: 'vote_average.desc',
-    'vote_average.gte': 6.5,
-    'vote_count.gte': 500,
+    sort_by: 'popularity.desc',
+    'vote_average.gte': 6.0,
+    'vote_count.gte': 300,
     with_original_language: 'en',
   },
   calming: {
     sort_by: 'popularity.desc',
-    'vote_average.gte': 6,
-    'vote_count.gte': 500,
+    'vote_average.gte': 6.0,
+    'vote_count.gte': 300,
     with_original_language: 'en',
   },
   comforting: {
-    sort_by: 'vote_average.desc',
-    'vote_average.gte': 6.5,
-    'vote_count.gte': 500,
+    sort_by: 'popularity.desc',
+    'vote_average.gte': 6.0,
+    'vote_count.gte': 300,
     with_original_language: 'en',
   },
   reflective: {
-    sort_by: 'vote_average.desc',
-    'vote_average.gte': 6.5,
-    'vote_count.gte': 500,
+    sort_by: 'popularity.desc',
+    'vote_average.gte': 6.0,
+    'vote_count.gte': 300,
     with_original_language: 'en',
   },
   relaxing: {
     sort_by: 'popularity.desc',
-    'vote_average.gte': 6.5,
-    'vote_count.gte': 500,
+    'vote_average.gte': 6.0,
+    'vote_count.gte': 300,
     with_original_language: 'en',
   },
   exciting: {
     sort_by: 'popularity.desc',
-    'vote_average.gte': 6.5,
-    'vote_count.gte': 500,
+    'vote_average.gte': 6.0,
+    'vote_count.gte': 300,
     with_original_language: 'en',
   },
   connecting: {
-    sort_by: 'vote_average.desc',
-    'vote_average.gte': 6.5,
-    'vote_count.gte': 500,
+    sort_by: 'popularity.desc',
+    'vote_average.gte': 6.0,
+    'vote_count.gte': 300,
     with_original_language: 'en',
   },
   releasing: {
     sort_by: 'popularity.desc',
-    'vote_average.gte': 6.5,
-    'vote_count.gte': 500,
+    'vote_average.gte': 6.0,
+    'vote_count.gte': 300,
     with_original_language: 'en',
   },
   clarifying: {
-    sort_by: 'vote_average.desc',
-    'vote_average.gte': 6.5,
-    'vote_count.gte': 500,
+    sort_by: 'popularity.desc',
+    'vote_average.gte': 6.0,
+    'vote_count.gte': 300,
     with_original_language: 'en',
   },
   thrilling: {
     sort_by: 'popularity.desc',
-    'vote_average.gte': 6,
-    'vote_count.gte': 500,
+    'vote_average.gte': 6.0,
+    'vote_count.gte': 300,
     with_original_language: 'en',
   },
 };
