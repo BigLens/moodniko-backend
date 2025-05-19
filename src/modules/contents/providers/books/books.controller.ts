@@ -1,13 +1,14 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { BooksService } from './books.service';
-import { ContentEntity } from '@modules/contents/model/content.entity';
+import { ApiGetBooksByMood } from './docs/book-docs';
 
 @Controller('books')
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Get('mood')
-  async getBooksByMood(@Query('mood') mood: string): Promise<ContentEntity[]> {
+  @ApiGetBooksByMood()
+  async getBooksByMood(@Query('mood') mood: string) {
     return this.booksService.fetchBooksByMood(mood);
   }
 }
