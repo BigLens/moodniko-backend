@@ -1,15 +1,27 @@
 import { ContentEntity } from '@modules/contents/model/content.entity';
 import { ContentType } from '@modules/contents/enum/content.enum';
+import { SpotifyContentType } from './enum/spotify-content.enum';
 import { SpotifyTrack, SpotifyPodcast } from './interface/spotify.interface';
+
+const mapSpotifyTypeToContentType = (type: SpotifyContentType): ContentType => {
+  switch (type) {
+    case SpotifyContentType.MUSIC:
+      return ContentType.MUSIC;
+    case SpotifyContentType.PODCAST:
+      return ContentType.PODCAST;
+    default:
+      return ContentType.MUSIC; // Default to MUSIC for BOTH case
+  }
+};
 
 export const mapToContentEntity = (
   item: SpotifyTrack | SpotifyPodcast,
-  type: ContentType,
+  type: SpotifyContentType,
   mood: string,
 ): ContentEntity => {
   const content = new ContentEntity();
 
-  if (type === ContentType.MUSIC) {
+  if (type === SpotifyContentType.MUSIC) {
     const track = item as SpotifyTrack;
     content.externalId = parseInt(track.id, 10);
     content.title = track.name;
@@ -25,6 +37,6 @@ export const mapToContentEntity = (
     content.moodtag = mood;
   }
 
-  content.type = type;
+  content.type = mapSpotifyTypeToContentType(type);
   return content;
 };
