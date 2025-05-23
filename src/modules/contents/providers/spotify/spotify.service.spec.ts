@@ -3,6 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { of, throwError } from 'rxjs';
 import { SpotifyService } from './spotify.service';
 import { ContentType } from '@modules/contents/enum/content.enum';
+import { SpotifyContentType } from './enum/spotify-content.enum';
 import {
   InternalServerErrorException,
   BadRequestException,
@@ -213,7 +214,7 @@ describe('SpotifyService', () => {
       expect(result[1].type).toBe(ContentType.PODCAST);
     });
 
-    it('should return only music when ContentType.MUSIC specified', async () => {
+    it('should return only music when SpotifyContentType.MUSIC specified', async () => {
       mockHttpService.get.mockReturnValue(
         of({
           data: {
@@ -226,13 +227,13 @@ describe('SpotifyService', () => {
 
       const result = await service.fetchContentByMood(
         'happy',
-        ContentType.MUSIC,
+        SpotifyContentType.MUSIC,
       );
       expect(result).toHaveLength(1);
       expect(result[0].type).toBe(ContentType.MUSIC);
     });
 
-    it('should return only podcasts when ContentType.PODCAST specified', async () => {
+    it('should return only podcasts when SpotifyContentType.PODCAST specified', async () => {
       mockHttpService.get.mockReturnValue(
         of({
           data: {
@@ -245,7 +246,7 @@ describe('SpotifyService', () => {
 
       const result = await service.fetchContentByMood(
         'happy',
-        ContentType.PODCAST,
+        SpotifyContentType.PODCAST,
       );
       expect(result).toHaveLength(1);
       expect(result[0].type).toBe(ContentType.PODCAST);
