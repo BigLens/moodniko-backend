@@ -4,6 +4,7 @@ import { ContentEntity } from '@modules/contents/model/content.entity';
 import { MoviesService } from './providers/movies/movies.service';
 import { SpotifyService } from './providers/spotify/spotify.service';
 import { BooksService } from './providers/books/books.service';
+import { mapContentTypeToSpotifyType } from './providers/spotify/mappers/content-type.mapper';
 
 @Injectable()
 export class ContentsService {
@@ -20,9 +21,10 @@ export class ContentsService {
     if (type === ContentType.MOVIE) {
       return await this.moviesService.fetchMoviesByMood(mood);
     } else if (type === ContentType.MUSIC || type === ContentType.PODCAST) {
-      return await this.spotifyService.fetchContentByMood(mood, type);
+      const spotifyType = mapContentTypeToSpotifyType(type);
+      return await this.spotifyService.fetchContentByMood(mood, spotifyType);
     } else if (type === ContentType.BOOK) {
-      return await this.booksService.fetchBooksByMood(mood); // Assuming this method exists in BooksService
+      return await this.booksService.fetchBooksByMood(mood);
     } else throw new Error(`Invalid content type: ${type}`);
   }
 }

@@ -6,7 +6,7 @@ import {
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, timeout } from 'rxjs';
 import { ContentEntity } from '@modules/contents/model/content.entity';
-import { ContentType } from '@modules/contents/enum/content.enum';
+import { SpotifyContentType } from './enum/spotify-content.enum';
 import { mapToContentEntity } from './spotify.mapper';
 import {
   SpotifyTrack,
@@ -129,7 +129,7 @@ export class SpotifyService {
 
   async fetchContentByMood(
     mood: string,
-    contentType?: ContentType,
+    contentType?: SpotifyContentType,
   ): Promise<ContentEntity[]> {
     if (!mood?.trim()) {
       throw new BadRequestException('Mood parameter is required');
@@ -155,27 +155,39 @@ export class SpotifyService {
       const searchQuery = genres.join(' ');
 
       // Fetch music if requested or if no specific content type is specified
-      if (!contentType || contentType === ContentType.MUSIC) {
+      if (
+        !contentType ||
+        contentType === SpotifyContentType.MUSIC ||
+        contentType === SpotifyContentType.BOTH
+      ) {
         const tracks = (await this.searchContent(
           searchQuery,
           'track',
         )) as SpotifyTrack[];
         content.push(
           ...tracks.map((track) =>
-            mapToContentEntity(track, ContentType.MUSIC, normalizedMood),
+            mapToContentEntity(track, SpotifyContentType.MUSIC, normalizedMood),
           ),
         );
       }
 
       // Fetch podcasts if requested or if no specific content type is specified
-      if (!contentType || contentType === ContentType.PODCAST) {
+      if (
+        !contentType ||
+        contentType === SpotifyContentType.PODCAST ||
+        contentType === SpotifyContentType.BOTH
+      ) {
         const podcasts = (await this.searchContent(
           searchQuery,
           'show',
         )) as SpotifyPodcast[];
         content.push(
           ...podcasts.map((podcast) =>
-            mapToContentEntity(podcast, ContentType.PODCAST, normalizedMood),
+            mapToContentEntity(
+              podcast,
+              SpotifyContentType.PODCAST,
+              normalizedMood,
+            ),
           ),
         );
       }
