@@ -42,6 +42,38 @@ export const moodToGenreMap: Record<
     genres: ['electronic', 'dance', 'rock'],
     effect: 'energetic',
   },
+  inspired: {
+    genres: ['indie', 'folk', 'singer-songwriter'],
+    effect: 'moderate',
+  },
+  moody: {
+    genres: ['indie', 'alternative', 'soul'],
+    effect: 'moderate',
+  },
+  stressed: {
+    genres: ['ambient', 'classical', 'meditation'],
+    effect: 'calm',
+  },
+  bored: {
+    genres: ['electronic', 'dance', 'pop'],
+    effect: 'energetic',
+  },
+  lonely: {
+    genres: ['indie', 'folk', 'singer-songwriter'],
+    effect: 'moderate',
+  },
+  tired: {
+    genres: ['ambient', 'classical', 'lofi'],
+    effect: 'calm',
+  },
+  confused: {
+    genres: ['ambient', 'experimental', 'classical'],
+    effect: 'moderate',
+  },
+  scared: {
+    genres: ['ambient', 'classical', 'dark-ambient'],
+    effect: 'calm',
+  },
 };
 
 export const emotionalImpactParams: Record<string, Record<string, number>> = {
