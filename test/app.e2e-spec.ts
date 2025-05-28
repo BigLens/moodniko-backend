@@ -6,7 +6,6 @@ import { AppModule } from './../src/app.module';
 describe('AppController (e2e)', () => {
   let app: INestApplication;
 
-  // This is a sample test case for the main application
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -20,6 +19,10 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect('Hello World!');
+      .expect((res) => {
+        expect(res.body).toHaveProperty('status', 'ok');
+        expect(res.body).toHaveProperty('timestamp');
+        expect(new Date(res.body.timestamp)).toBeInstanceOf(Date);
+      });
   });
 });
