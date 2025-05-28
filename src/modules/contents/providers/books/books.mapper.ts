@@ -1,6 +1,6 @@
 import { ContentEntity } from '@modules/contents/model/content.entity';
-import { ContentType } from '@modules/contents/enum/content.enum';
 import { GoogleBook } from './interface/books.interface';
+import { ContentType } from '@modules/contents/enum/content.enum';
 
 export function mapToContentEntity(
   book: GoogleBook,
@@ -8,15 +8,10 @@ export function mapToContentEntity(
   mood: string,
 ): ContentEntity {
   const entity = new ContentEntity();
-  entity.externalId = book.id
-    .split('')
-    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  entity.externalId = book.id;
   entity.title = book.volumeInfo.title || '';
   entity.description = book.volumeInfo.description || '';
-  entity.imageUrl =
-    book.volumeInfo.imageLinks?.thumbnail ||
-    book.volumeInfo.imageLinks?.smallThumbnail ||
-    null;
+  entity.imageUrl = book.volumeInfo.imageLinks?.thumbnail || '';
   entity.type = type;
   entity.moodtag = mood;
 

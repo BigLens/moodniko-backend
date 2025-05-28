@@ -29,5 +29,29 @@ export const moodToGenreMap: Record<string, { genres: string[] }> = {
   peaceful: {
     genres: ['meditation', 'mindfulness', 'spirituality', 'nature'],
   },
+  inspired: {
+    genres: ['creativity', 'art', 'philosophy', 'inspiration', 'biography'],
+  },
+  moody: {
+    genres: ['poetry', 'literary fiction', 'psychological fiction'],
+  },
+  stressed: {
+    genres: ['stress management', 'self-help', 'meditation', 'mindfulness'],
+  },
+  bored: {
+    genres: ['adventure', 'mystery', 'thriller', 'fantasy'],
+  },
+  lonely: {
+    genres: ['self-help', 'relationships', 'psychology', 'memoir'],
+  },
+  tired: {
+    genres: ['self-help', 'health', 'wellness', 'meditation'],
+  },
+  confused: {
+    genres: ['philosophy', 'psychology', 'self-help', 'spirituality'],
+  },
+  scared: {
+    genres: ['thriller', 'horror', 'psychological fiction', 'self-help'],
+  },
 };
 //mappers

@@ -1,14 +1,21 @@
 import { Module } from '@nestjs/common';
-import { ContentsService } from '@modules/contents/contents.service';
-import { ContentsController } from '@modules/contents/contents.controller';
-import { MoviesModule } from '@modules/contents/providers/movies/movies.module';
-import { SpotifyModule } from '@modules/contents/providers/spotify/spotify.module';
-import { BooksModule } from '@modules/contents/providers/books/books.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ContentsController } from './contents.controller';
+import { ContentsService } from './contents.service';
+import { ContentEntity } from './model/content.entity';
+import { MoviesModule } from './providers/movies/movies.module';
+import { SpotifyModule } from './providers/spotify/spotify.module';
+import { BooksModule } from './providers/books/books.module';
+import { ContentRepository } from './repository/content.repository';
 
 @Module({
-  // Importing the necessary modules for the ContentsModule
-  imports: [MoviesModule, SpotifyModule, BooksModule],
-  providers: [ContentsService],
+  imports: [
+    TypeOrmModule.forFeature([ContentEntity]),
+    MoviesModule,
+    SpotifyModule,
+    BooksModule,
+  ],
   controllers: [ContentsController],
+  providers: [ContentsService, ContentRepository],
 })
 export class ContentsModule {}

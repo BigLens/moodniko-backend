@@ -7,7 +7,10 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, timeout } from 'rxjs';
 import { ContentEntity } from '@modules/contents/model/content.entity';
 import { SpotifyContentType } from './enum/spotify-content.enum';
-import { mapToContentEntity } from './spotify.mapper';
+import {
+  mapTrackToContentEntity,
+  mapPodcastToContentEntity,
+} from './spotify.mapper';
 import {
   SpotifyTrack,
   SpotifyPodcast,
@@ -15,6 +18,7 @@ import {
   SpotifySearchResponse,
 } from './interface/spotify.interface';
 import { moodToGenreMap } from './mood-mapping';
+import { ContentType } from '@modules/contents/enum/content.enum';
 
 @Injectable()
 export class SpotifyService {
@@ -166,7 +170,7 @@ export class SpotifyService {
         )) as SpotifyTrack[];
         content.push(
           ...tracks.map((track) =>
-            mapToContentEntity(track, SpotifyContentType.MUSIC, normalizedMood),
+            mapTrackToContentEntity(track, ContentType.MUSIC, normalizedMood),
           ),
         );
       }
@@ -183,9 +187,9 @@ export class SpotifyService {
         )) as SpotifyPodcast[];
         content.push(
           ...podcasts.map((podcast) =>
-            mapToContentEntity(
+            mapPodcastToContentEntity(
               podcast,
-              SpotifyContentType.PODCAST,
+              ContentType.PODCAST,
               normalizedMood,
             ),
           ),

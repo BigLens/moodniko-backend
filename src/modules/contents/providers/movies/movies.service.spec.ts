@@ -119,7 +119,7 @@ describe('MoviesService', () => {
         moodtag: 'happy',
         description: 'Test Overview',
         imageUrl: 'https://image.tmdb.org/t/p/w500/test.jpg',
-        externalId: 1,
+        externalId: '1',
       });
     });
 
