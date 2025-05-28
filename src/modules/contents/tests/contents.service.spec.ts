@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ContentsService } from './contents.service';
-import { MoviesService } from './providers/movies/movies.service';
-import { SpotifyService } from './providers/spotify/spotify.service';
-import { BooksService } from './providers/books/books.service';
-import { ContentRepository } from './repository/content.repository';
-import { ContentType } from './enum/content.enum';
-import { ContentEntity } from './model/content.entity';
-import { SpotifyContentType } from './providers/spotify/enum/spotify-content.enum';
+import { ContentsService } from '../contents.service';
+import { MoviesService } from '../providers/movies/movies.service';
+import { SpotifyService } from '../providers/spotify/spotify.service';
+import { BooksService } from '../providers/books/books.service';
+import { ContentRepository } from '../repository/content.repository';
+import { ContentType } from '../enum/content.enum';
+import { ContentEntity } from '../model/content.entity';
+import { SpotifyContentType } from '../providers/spotify/enum/spotify-content.enum';
 
 describe('ContentsService', () => {
   let service: ContentsService;
@@ -68,17 +68,14 @@ describe('ContentsService', () => {
     jest.clearAllMocks();
   });
 
-  describe('getContentsByMood', () => {
+  describe('getContentByMood', () => {
     it('should fetch and save movies successfully', async () => {
       const mockMovies = [mockContentEntity(ContentType.MOVIE)];
       mockMoviesService.fetchMoviesByMood.mockResolvedValue(mockMovies);
       mockContentRepository.findByExternalId.mockResolvedValue(null);
       mockContentRepository.save.mockResolvedValue(mockMovies[0]);
 
-      const result = await service.getContentsByMood(
-        'happy',
-        ContentType.MOVIE,
-      );
+      const result = await service.getContentByMood('happy', ContentType.MOVIE);
 
       expect(mockMoviesService.fetchMoviesByMood).toHaveBeenCalledWith('happy');
       expect(mockContentRepository.findByExternalId).toHaveBeenCalledWith(
@@ -95,10 +92,7 @@ describe('ContentsService', () => {
       mockContentRepository.findByExternalId.mockResolvedValue(null);
       mockContentRepository.save.mockResolvedValue(mockMusic[0]);
 
-      const result = await service.getContentsByMood(
-        'happy',
-        ContentType.MUSIC,
-      );
+      const result = await service.getContentByMood('happy', ContentType.MUSIC);
 
       expect(mockSpotifyService.fetchContentByMood).toHaveBeenCalledWith(
         'happy',
@@ -118,7 +112,7 @@ describe('ContentsService', () => {
       mockContentRepository.findByExternalId.mockResolvedValue(null);
       mockContentRepository.save.mockResolvedValue(mockPodcasts[0]);
 
-      const result = await service.getContentsByMood(
+      const result = await service.getContentByMood(
         'happy',
         ContentType.PODCAST,
       );
@@ -141,7 +135,7 @@ describe('ContentsService', () => {
       mockContentRepository.findByExternalId.mockResolvedValue(null);
       mockContentRepository.save.mockResolvedValue(mockBooks[0]);
 
-      const result = await service.getContentsByMood('happy', ContentType.BOOK);
+      const result = await service.getContentByMood('happy', ContentType.BOOK);
 
       expect(mockBooksService.fetchBooksByMood).toHaveBeenCalledWith('happy');
       expect(mockContentRepository.findByExternalId).toHaveBeenCalledWith(
@@ -157,10 +151,7 @@ describe('ContentsService', () => {
       mockMoviesService.fetchMoviesByMood.mockResolvedValue(mockMovies);
       mockContentRepository.findByExternalId.mockResolvedValue(mockMovies[0]);
 
-      const result = await service.getContentsByMood(
-        'happy',
-        ContentType.MOVIE,
-      );
+      const result = await service.getContentByMood('happy', ContentType.MOVIE);
 
       expect(mockContentRepository.findByExternalId).toHaveBeenCalledWith(
         'test-id',
@@ -172,17 +163,14 @@ describe('ContentsService', () => {
 
     it('should throw error for invalid content type', async () => {
       await expect(
-        service.getContentsByMood('happy', 'INVALID' as ContentType),
+        service.getContentByMood('happy', 'INVALID' as ContentType),
       ).rejects.toThrow('Invalid content type: INVALID');
     });
 
     it('should handle empty results from providers', async () => {
       mockMoviesService.fetchMoviesByMood.mockResolvedValue([]);
 
-      const result = await service.getContentsByMood(
-        'happy',
-        ContentType.MOVIE,
-      );
+      const result = await service.getContentByMood('happy', ContentType.MOVIE);
 
       expect(result).toEqual([]);
       expect(mockContentRepository.findByExternalId).not.toHaveBeenCalled();
@@ -195,7 +183,7 @@ describe('ContentsService', () => {
       );
 
       await expect(
-        service.getContentsByMood('happy', ContentType.MOVIE),
+        service.getContentByMood('happy', ContentType.MOVIE),
       ).rejects.toThrow('Provider error');
     });
 
@@ -207,7 +195,7 @@ describe('ContentsService', () => {
       );
 
       await expect(
-        service.getContentsByMood('happy', ContentType.MOVIE),
+        service.getContentByMood('happy', ContentType.MOVIE),
       ).rejects.toThrow('Repository error');
     });
   });

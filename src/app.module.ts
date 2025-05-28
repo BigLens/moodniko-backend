@@ -5,13 +5,14 @@ import dataSource from './database/data-source';
 import { MoodModule } from '@modules/mood/mood.module';
 import { ContentsModule } from '@modules/contents/contents.module';
 import { MoviesModule } from '@modules/contents/providers/movies/movies.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-
     TypeOrmModule.forRootAsync({
       useFactory: async () => ({
         ...dataSource.options,
@@ -27,5 +28,7 @@ import { MoviesModule } from '@modules/contents/providers/movies/movies.module';
     ContentsModule,
     MoviesModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

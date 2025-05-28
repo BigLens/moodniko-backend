@@ -4,29 +4,54 @@ import { ContentEntity } from '@modules/contents/model/content.entity';
 import { MoviesService } from './providers/movies/movies.service';
 import { SpotifyService } from './providers/spotify/spotify.service';
 import { BooksService } from './providers/books/books.service';
-import { mapContentTypeToSpotifyType } from './providers/spotify/mappers/content-type.mapper';
 import { ContentRepository } from './repository/content.repository';
+import { SpotifyContentType } from './providers/spotify/enum/spotify-content.enum';
 
 @Injectable()
 export class ContentsService {
   constructor(
-    private moviesService: MoviesService,
-    private spotifyService: SpotifyService,
-    private booksService: BooksService,
-    private contentRepository: ContentRepository,
+    private readonly contentRepository: ContentRepository,
+    private readonly moviesService: MoviesService,
+    private readonly spotifyService: SpotifyService,
+    private readonly booksService: BooksService,
   ) {}
 
-  private async deduplicateAndSaveContents(
-    contents: ContentEntity[],
+  async getContentByMood(
+    mood: string,
+    type: ContentType,
   ): Promise<ContentEntity[]> {
-    const savedContents: ContentEntity[] = [];
+    let contents: ContentEntity[] = [];
 
+    switch (type) {
+      case ContentType.MOVIE:
+        contents = await this.moviesService.fetchMoviesByMood(mood);
+        break;
+      case ContentType.MUSIC:
+        contents = await this.spotifyService.fetchContentByMood(
+          mood,
+          SpotifyContentType.MUSIC,
+        );
+        break;
+      case ContentType.PODCAST:
+        contents = await this.spotifyService.fetchContentByMood(
+          mood,
+          SpotifyContentType.PODCAST,
+        );
+        break;
+      case ContentType.BOOK:
+        contents = await this.booksService.fetchBooksByMood(mood);
+        break;
+      default:
+        throw new Error(`Invalid content type: ${type}`);
+    }
+
+    // Deduplicate and save contents
+    const savedContents: ContentEntity[] = [];
     for (const content of contents) {
       const existingContent = await this.contentRepository.findByExternalId(
         content.externalId,
         content.type,
       );
-
       if (existingContent) {
         savedContents.push(existingContent);
       } else {
@@ -36,28 +61,5 @@ export class ContentsService {
     }
 
     return savedContents;
-  }
-
-  async getContentsByMood(
-    mood: string,
-    type: ContentType,
-  ): Promise<ContentEntity[]> {
-    let contents: ContentEntity[];
-
-    if (type === ContentType.MOVIE) {
-      contents = await this.moviesService.fetchMoviesByMood(mood);
-    } else if (type === ContentType.MUSIC || type === ContentType.PODCAST) {
-      const spotifyType = mapContentTypeToSpotifyType(type);
-      contents = await this.spotifyService.fetchContentByMood(
-        mood,
-        spotifyType,
-      );
-    } else if (type === ContentType.BOOK) {
-      contents = await this.booksService.fetchBooksByMood(mood);
-    } else {
-      throw new Error(`Invalid content type: ${type}`);
-    }
-
-    return this.deduplicateAndSaveContents(contents);
   }
 }

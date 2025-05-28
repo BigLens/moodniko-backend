@@ -17,18 +17,12 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "allowJs": true,
     "paths": {
-      "@decorators/*": ["src/decorators/*"],
-      "@database/*": ["src/database/*"],
-      "@entities/*": ["src/entities/*"],
       "@modules/*": ["src/modules/*"],
-      "@shared/*": ["src/shared/*"],
-      "@guards/*": ["src/guards/*"],
-      "@helpers/*": ["src/helpers/*"],
-      "@config/*": ["src/config/*"],
       "@utils/*": ["src/utils/*"],
-      "@types/*": ["src/types/*"]
-    },
-    "typeRoots": ["node_modules/@types","src/types/*",]
+      "@types/*": ["src/types/*"],
+      "@entities/*": ["src/entities/*"]
+    }
   }
 }

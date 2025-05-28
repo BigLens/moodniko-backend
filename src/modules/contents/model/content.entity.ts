@@ -25,4 +25,10 @@ export class ContentEntity extends BaseEntity {
 
   @Column()
   moodtag: string;
+
+  @Column({ type: 'timestamp' })
+  createdAt: Date;
+
+  @Column({ type: 'timestamp' })
+  updatedAt: Date;
 }
