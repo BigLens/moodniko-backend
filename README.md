@@ -1,15 +1,19 @@
-# **MoodMate**
+# **MoodNiko**
 
-**MoodMate** is an interactive mental health app designed to help users track their mood and find personalized content that can uplift and support them. Whether it's reading a book, listening to a podcast, watching a movie, or more, **MoodMate** provides content recommendations based on your mood and preferences.
+**MoodNiko** is a mood-based content generation app designed to support users' current emotional state through personalized content recommendations. Whether you're feeling happy, sad, anxious, or energetic, MoodNiko provides tailored content suggestions to enhance your current mood or help you transition to a more positive state.
 
 ---
 
 ## **Features**
 
-- **Mood Tracking**: Users can input their current mood and receive tailored content recommendations.
-- **Personalized Content**: Based on the user’s mood, MoodMate suggests content like books, movies, music, and podcasts to help improve their well-being.
-- **Soothing Messages**: After tracking their mood, users are greeted with calming and encouraging words.
-- **User Preferences**: Users can choose their favorite ways to unwind and receive relevant recommendations.
+- **Mood-Based Content**: Share your current mood and receive personalized content recommendations that match or uplift your emotional state
+- **Diverse Content Types**: Choose from various content types including:
+  - Music (via Spotify)
+  - Movies and TV Shows (via TMDB)
+  - Books (via GOOGLE BOOKS)
+  - Podcasts (via Spotify)
+- **Supportive Messages**: Receive encouraging words tailored to your current mood
+- **Personalized Experience**: Select your preferred content types for more relevant recommendations
 
 ---
 
@@ -17,7 +21,6 @@
 
 - **Backend**: NestJS
 - **Database**: PostgreSQL with TypeORM
-- **Authentication**: JWT (JSON Web Tokens)
 - **ORM**: TypeORM (for interacting with PostgreSQL)
 - **Frontend (Planned)**: React with TailwindCSS
 
@@ -26,40 +29,59 @@
 ## **Installation**
 
 ### 1. Clone the Repository
+
 ```bash
-git clone https://github.com/your-username/moodmate-backend.git
+git clone https://github.com/your-username/moodniko-backend.git
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 npm install
 ```
 
 ### 3. Set Up Environment Variables
+
 - Create a `.env` file at the root directory of the project.
 
-```
+```bash
 cp .env.example .env
 ```
-- Fill in the appropriate values in the `.env` file. You will need to set up your PostgreSQL database and provide the connection details.
+
+Required environment variables:
+
+```
+# Database
+DATABASE_URL=postgresql://username:password@localhost:5432/moodniko
+
+# JWT
+JWT_SECRET=your_jwt_secret
+
+# Third-party Services
+SPOTIFY_CLIENT_ID=your_spotify_client_id
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+TMDB_API_KEY=your_tmdb_api_key
+```
 
 ### 4. Run the Application
+
 ```bash
 npm run start:dev
 ```
 
 - Open the browser and go to `http://localhost:4002` to see the backend in action.
+- Access the API documentation at `http://localhost:4002/api/docs`
 
 ---
 
-## **Endpoints**
+## **Module Documentation**
 
-### Authentication
-- **POST** `/auth/signup`: Sign up a new user.
-- **POST** `/auth/signin`: Sign in a user.
+The content module documentation is available in `src/README.md`. This document provides detailed information about:
 
-### Mood
-- **GET** `/mood`: Get personalized content recommendations based on the user's mood.
+- Content recommendation system
+- Mood-to-genre mapping
+- Third-party service integrations (Spotify, TMDB, Google Books)
+- API endpoints and usage
 
 ---
 
@@ -67,6 +89,8 @@ npm run start:dev
 
 If you'd like to contribute to this project, feel free to fork the repository, create a new branch, and submit a pull request. Here are some guidelines to follow:
 
-1. Write clean, maintainable code.
-2. Add tests for new features.
-3. Follow standard commit message conventions.
+1. Write clean, maintainable code
+2. Add tests for new features
+3. Follow standard commit message conventions
+4. Update relevant documentation
+5. Ensure all tests pass before submitting a PR
