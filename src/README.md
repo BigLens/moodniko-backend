@@ -5,10 +5,10 @@ The Content Module is the core component of MoodNiko that handles mood-based con
 ## Module Structure
 
 ```
-src/modules/content/
-├── content.controller.ts    # API endpoints and request handling
-├── content.service.ts       # Business logic and service orchestration
-├── content.module.ts        # Module configuration and dependencies
+src/modules/contents/
+├── contents.controller.ts    # API endpoints and request handling
+├── contents.service.ts       # Business logic and service orchestration
+├── contents.module.ts        # Module configuration and dependencies
 ├── dto/                     # Data Transfer Objects
 ├── entities/               # Database entities
 └── integrations/           # Third-party service integrations
