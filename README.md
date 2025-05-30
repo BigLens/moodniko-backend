@@ -76,11 +76,11 @@ npm run start:dev
 
 ## **Module Documentation**
 
-The content module documentation is available at `docs/modules/content.md`. This document provides detailed information about:
+The content module documentation is available in `src/README.md`. This document provides detailed information about:
 
 - Content recommendation system
 - Mood-to-genre mapping
-- Third-party service integrations
+- Third-party service integrations (Spotify, TMDB, Google Books)
 - API endpoints and usage
 
 ---
