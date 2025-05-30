@@ -1,15 +1,19 @@
 # **MoodNiko**
 
-**MoodNiko** is an interactive mental health app designed to help users track their mood and find personalized content that can uplift and support them. Whether it's reading a book, listening to a podcast, watching a movie, or more, **MoodNiko** provides content recommendations based on your mood and preferences.
+**MoodNiko** is a mood-based content generation app designed to support users' current emotional state through personalized content recommendations. Whether you're feeling happy, sad, anxious, or energetic, MoodNiko provides tailored content suggestions to enhance your current mood or help you transition to a more positive state.
 
 ---
 
 ## **Features**
 
-- **Mood Tracking**: Users can input their current mood and receive tailored content recommendations.
-- **Personalized Content**: Based on the user's mood, MoodNiko suggests content like books, movies, music, and podcasts to help improve their well-being.
-- **Soothing Messages**: After tracking their mood, users are greeted with calming and encouraging words.
-- **User Preferences**: Users can choose their favorite ways to unwind and receive relevant recommendations.
+- **Mood-Based Content**: Share your current mood and receive personalized content recommendations that match or uplift your emotional state
+- **Diverse Content Types**: Choose from various content types including:
+  - Music (via Spotify)
+  - Movies and TV Shows (via TMDB)
+  - Books (via GOOGLE BOOKS)
+  - Podcasts (via Spotify)
+- **Supportive Messages**: Receive encouraging words tailored to your current mood
+- **Personalized Experience**: Select your preferred content types for more relevant recommendations
 
 ---
 
@@ -17,7 +21,6 @@
 
 - **Backend**: NestJS
 - **Database**: PostgreSQL with TypeORM
-- **Authentication**: JWT (JSON Web Tokens)
 - **ORM**: TypeORM (for interacting with PostgreSQL)
 - **Frontend (Planned)**: React with TailwindCSS
 
@@ -73,11 +76,12 @@ npm run start:dev
 
 ## **Module Documentation**
 
-Detailed documentation for each module is available in the `docs` directory:
+The content module documentation is available at `docs/modules/content.md`. This document provides detailed information about:
 
-- Content Module: `docs/modules/content.md`
-- Auth Module: `docs/modules/auth.md`
-- Mood Module: `docs/modules/mood.md`
+- Content recommendation system
+- Mood-to-genre mapping
+- Third-party service integrations
+- API endpoints and usage
 
 ---
 
@@ -90,9 +94,3 @@ If you'd like to contribute to this project, feel free to fork the repository, c
 3. Follow standard commit message conventions
 4. Update relevant documentation
 5. Ensure all tests pass before submitting a PR
-
----
-
-## **License**
-
-This project is licensed under the MIT License - see the LICENSE file for details.
