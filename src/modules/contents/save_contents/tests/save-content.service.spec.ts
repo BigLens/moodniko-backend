@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { SaveContentService } from '../save-content.service';
 import { SavedContent } from '../save-content.entity';
 import { ContentEntity } from '../../model/content.entity';
@@ -8,8 +7,6 @@ import { NotFoundException, BadRequestException } from '@nestjs/common';
 
 describe('SaveContentService', () => {
   let service: SaveContentService;
-  let savedContentRepository: Repository<SavedContent>;
-  let contentRepository: Repository<ContentEntity>;
 
   const mockSavedContentRepository = {
     create: jest.fn(),
@@ -39,12 +36,6 @@ describe('SaveContentService', () => {
     }).compile();
 
     service = module.get<SaveContentService>(SaveContentService);
-    savedContentRepository = module.get<Repository<SavedContent>>(
-      getRepositoryToken(SavedContent),
-    );
-    contentRepository = module.get<Repository<ContentEntity>>(
-      getRepositoryToken(ContentEntity),
-    );
   });
 
   afterEach(() => {
