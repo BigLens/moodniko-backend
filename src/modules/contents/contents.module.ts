@@ -6,7 +6,6 @@ import { ContentEntity } from './model/content.entity';
 import { MoviesModule } from './providers/movies/movies.module';
 import { SpotifyModule } from './providers/spotify/spotify.module';
 import { BooksModule } from './providers/books/books.module';
-import { ContentRepository } from './repository/content.repository';
 import { SaveContentModule } from './save_contents/save-content.module';
 
 @Module({
@@ -18,6 +17,7 @@ import { SaveContentModule } from './save_contents/save-content.module';
     SaveContentModule,
   ],
   controllers: [ContentsController],
-  providers: [ContentsService, ContentRepository],
+  providers: [ContentsService],
+  exports: [ContentsService],
 })
 export class ContentsModule {}

@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { ContentType } from '@modules/contents/enum/content.enum';
 import { ContentEntity } from '@modules/contents/model/content.entity';
 import { MoviesService } from './providers/movies/movies.service';
 import { SpotifyService } from './providers/spotify/spotify.service';
 import { BooksService } from './providers/books/books.service';
-import { ContentRepository } from './repository/content.repository';
 import { SpotifyContentType } from './providers/spotify/enum/spotify-content.enum';
 
 @Injectable()
 export class ContentsService {
   constructor(
-    private readonly contentRepository: ContentRepository,
+    @InjectRepository(ContentEntity)
+    private readonly contentRepository: Repository<ContentEntity>,
     private readonly moviesService: MoviesService,
     private readonly spotifyService: SpotifyService,
     private readonly booksService: BooksService,
@@ -48,10 +50,9 @@ export class ContentsService {
     // Deduplicate and save contents
     const savedContents: ContentEntity[] = [];
     for (const content of contents) {
-      const existingContent = await this.contentRepository.findByExternalId(
-        content.externalId,
-        content.type,
-      );
+      const existingContent = await this.contentRepository.findOne({
+        where: { externalId: content.externalId, type: content.type },
+      });
       if (existingContent) {
         savedContents.push(existingContent);
       } else {

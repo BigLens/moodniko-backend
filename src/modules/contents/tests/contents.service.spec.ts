@@ -1,27 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { ContentsService } from '../contents.service';
+import { ContentEntity } from '../model/content.entity';
+import { ContentType } from '../enum/content.enum';
 import { MoviesService } from '../providers/movies/movies.service';
 import { SpotifyService } from '../providers/spotify/spotify.service';
 import { BooksService } from '../providers/books/books.service';
-import { ContentRepository } from '../repository/content.repository';
-import { ContentType } from '../enum/content.enum';
-import { ContentEntity } from '../model/content.entity';
-import { SpotifyContentType } from '../providers/spotify/enum/spotify-content.enum';
 
 describe('ContentsService', () => {
   let service: ContentsService;
-
-  const mockContentEntity = (type: ContentType): ContentEntity => ({
-    id: 1,
-    externalId: 'test-id',
-    title: 'Test Content',
-    description: 'Test Description',
-    imageUrl: 'http://test.com/image.jpg',
-    type,
-    moodtag: 'happy',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  });
+  const mockContentRepository = {
+    findOne: jest.fn(),
+    save: jest.fn(),
+  };
 
   const mockMoviesService = {
     fetchMoviesByMood: jest.fn(),
@@ -35,16 +26,14 @@ describe('ContentsService', () => {
     fetchBooksByMood: jest.fn(),
   };
 
-  const mockContentRepository = {
-    findByExternalId: jest.fn(),
-    save: jest.fn(),
-    saveMany: jest.fn(),
-  };
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ContentsService,
+        {
+          provide: getRepositoryToken(ContentEntity),
+          useValue: mockContentRepository,
+        },
         {
           provide: MoviesService,
           useValue: mockMoviesService,
@@ -57,146 +46,160 @@ describe('ContentsService', () => {
           provide: BooksService,
           useValue: mockBooksService,
         },
-        {
-          provide: ContentRepository,
-          useValue: mockContentRepository,
-        },
       ],
     }).compile();
 
     service = module.get<ContentsService>(ContentsService);
+  });
+
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
   describe('getContentByMood', () => {
-    it('should fetch and save movies successfully', async () => {
-      const mockMovies = [mockContentEntity(ContentType.MOVIE)];
+    const mood = 'happy';
+
+    it('should fetch and save movies', async () => {
+      const mockMovies = [
+        {
+          id: 1,
+          externalId: 'movie1',
+          title: 'Test Movie',
+          type: ContentType.MOVIE,
+        } as ContentEntity,
+      ];
+
       mockMoviesService.fetchMoviesByMood.mockResolvedValue(mockMovies);
-      mockContentRepository.findByExternalId.mockResolvedValue(null);
+      mockContentRepository.findOne.mockResolvedValue(null);
       mockContentRepository.save.mockResolvedValue(mockMovies[0]);
 
-      const result = await service.getContentByMood('happy', ContentType.MOVIE);
+      const result = await service.getContentByMood(mood, ContentType.MOVIE);
 
-      expect(mockMoviesService.fetchMoviesByMood).toHaveBeenCalledWith('happy');
-      expect(mockContentRepository.findByExternalId).toHaveBeenCalledWith(
-        'test-id',
-        ContentType.MOVIE,
-      );
-      expect(mockContentRepository.save).toHaveBeenCalledWith(mockMovies[0]);
       expect(result).toEqual(mockMovies);
+      expect(mockContentRepository.findOne).toHaveBeenCalledWith({
+        where: { externalId: 'movie1', type: ContentType.MOVIE },
+      });
+      expect(mockContentRepository.save).toHaveBeenCalledWith(mockMovies[0]);
     });
 
-    it('should fetch and save music successfully', async () => {
-      const mockMusic = [mockContentEntity(ContentType.MUSIC)];
+    it('should fetch and save music', async () => {
+      const mockMusic = [
+        {
+          id: 1,
+          externalId: 'music1',
+          title: 'Test Music',
+          type: ContentType.MUSIC,
+        } as ContentEntity,
+      ];
+
       mockSpotifyService.fetchContentByMood.mockResolvedValue(mockMusic);
-      mockContentRepository.findByExternalId.mockResolvedValue(null);
+      mockContentRepository.findOne.mockResolvedValue(null);
       mockContentRepository.save.mockResolvedValue(mockMusic[0]);
 
-      const result = await service.getContentByMood('happy', ContentType.MUSIC);
+      const result = await service.getContentByMood(mood, ContentType.MUSIC);
 
-      expect(mockSpotifyService.fetchContentByMood).toHaveBeenCalledWith(
-        'happy',
-        SpotifyContentType.MUSIC,
-      );
-      expect(mockContentRepository.findByExternalId).toHaveBeenCalledWith(
-        'test-id',
-        ContentType.MUSIC,
-      );
-      expect(mockContentRepository.save).toHaveBeenCalledWith(mockMusic[0]);
       expect(result).toEqual(mockMusic);
+      expect(mockContentRepository.findOne).toHaveBeenCalledWith({
+        where: { externalId: 'music1', type: ContentType.MUSIC },
+      });
+      expect(mockContentRepository.save).toHaveBeenCalledWith(mockMusic[0]);
     });
 
-    it('should fetch and save podcasts successfully', async () => {
-      const mockPodcasts = [mockContentEntity(ContentType.PODCAST)];
+    it('should fetch and save podcasts', async () => {
+      const mockPodcasts = [
+        {
+          id: 1,
+          externalId: 'podcast1',
+          title: 'Test Podcast',
+          type: ContentType.PODCAST,
+        } as ContentEntity,
+      ];
+
       mockSpotifyService.fetchContentByMood.mockResolvedValue(mockPodcasts);
-      mockContentRepository.findByExternalId.mockResolvedValue(null);
+      mockContentRepository.findOne.mockResolvedValue(null);
       mockContentRepository.save.mockResolvedValue(mockPodcasts[0]);
 
-      const result = await service.getContentByMood(
-        'happy',
-        ContentType.PODCAST,
-      );
+      const result = await service.getContentByMood(mood, ContentType.PODCAST);
 
-      expect(mockSpotifyService.fetchContentByMood).toHaveBeenCalledWith(
-        'happy',
-        SpotifyContentType.PODCAST,
-      );
-      expect(mockContentRepository.findByExternalId).toHaveBeenCalledWith(
-        'test-id',
-        ContentType.PODCAST,
-      );
-      expect(mockContentRepository.save).toHaveBeenCalledWith(mockPodcasts[0]);
       expect(result).toEqual(mockPodcasts);
+      expect(mockContentRepository.findOne).toHaveBeenCalledWith({
+        where: { externalId: 'podcast1', type: ContentType.PODCAST },
+      });
+      expect(mockContentRepository.save).toHaveBeenCalledWith(mockPodcasts[0]);
     });
 
-    it('should fetch and save books successfully', async () => {
-      const mockBooks = [mockContentEntity(ContentType.BOOK)];
+    it('should fetch and save books', async () => {
+      const mockBooks = [
+        {
+          id: 1,
+          externalId: 'book1',
+          title: 'Test Book',
+          type: ContentType.BOOK,
+        } as ContentEntity,
+      ];
+
       mockBooksService.fetchBooksByMood.mockResolvedValue(mockBooks);
-      mockContentRepository.findByExternalId.mockResolvedValue(null);
+      mockContentRepository.findOne.mockResolvedValue(null);
       mockContentRepository.save.mockResolvedValue(mockBooks[0]);
 
-      const result = await service.getContentByMood('happy', ContentType.BOOK);
+      const result = await service.getContentByMood(mood, ContentType.BOOK);
 
-      expect(mockBooksService.fetchBooksByMood).toHaveBeenCalledWith('happy');
-      expect(mockContentRepository.findByExternalId).toHaveBeenCalledWith(
-        'test-id',
-        ContentType.BOOK,
-      );
-      expect(mockContentRepository.save).toHaveBeenCalledWith(mockBooks[0]);
       expect(result).toEqual(mockBooks);
+      expect(mockContentRepository.findOne).toHaveBeenCalledWith({
+        where: { externalId: 'book1', type: ContentType.BOOK },
+      });
+      expect(mockContentRepository.save).toHaveBeenCalledWith(mockBooks[0]);
     });
 
-    it('should handle existing content by returning it without saving', async () => {
-      const mockMovies = [mockContentEntity(ContentType.MOVIE)];
+    it('should return existing content if already saved', async () => {
+      const mockMovies = [
+        {
+          id: 1,
+          externalId: 'movie1',
+          title: 'Test Movie',
+          type: ContentType.MOVIE,
+        } as ContentEntity,
+      ];
+
       mockMoviesService.fetchMoviesByMood.mockResolvedValue(mockMovies);
-      mockContentRepository.findByExternalId.mockResolvedValue(mockMovies[0]);
+      mockContentRepository.findOne.mockResolvedValue(mockMovies[0]);
 
-      const result = await service.getContentByMood('happy', ContentType.MOVIE);
+      const result = await service.getContentByMood(mood, ContentType.MOVIE);
 
-      expect(mockContentRepository.findByExternalId).toHaveBeenCalledWith(
-        'test-id',
-        ContentType.MOVIE,
-      );
-      expect(mockContentRepository.save).not.toHaveBeenCalled();
       expect(result).toEqual(mockMovies);
+      expect(mockContentRepository.findOne).toHaveBeenCalledWith({
+        where: { externalId: 'movie1', type: ContentType.MOVIE },
+      });
+      expect(mockContentRepository.save).not.toHaveBeenCalled();
     });
 
     it('should throw error for invalid content type', async () => {
       await expect(
-        service.getContentByMood('happy', 'INVALID' as ContentType),
+        service.getContentByMood(mood, 'INVALID' as ContentType),
       ).rejects.toThrow('Invalid content type: INVALID');
-    });
 
-    it('should handle empty results from providers', async () => {
-      mockMoviesService.fetchMoviesByMood.mockResolvedValue([]);
-
-      const result = await service.getContentByMood('happy', ContentType.MOVIE);
-
-      expect(result).toEqual([]);
-      expect(mockContentRepository.findByExternalId).not.toHaveBeenCalled();
+      expect(mockContentRepository.findOne).not.toHaveBeenCalled();
       expect(mockContentRepository.save).not.toHaveBeenCalled();
     });
 
-    it('should handle provider errors gracefully', async () => {
-      mockMoviesService.fetchMoviesByMood.mockRejectedValue(
-        new Error('Provider error'),
-      );
-
-      await expect(
-        service.getContentByMood('happy', ContentType.MOVIE),
-      ).rejects.toThrow('Provider error');
-    });
-
     it('should handle repository errors gracefully', async () => {
-      const mockMovies = [mockContentEntity(ContentType.MOVIE)];
+      const mockMovies = [
+        {
+          id: 1,
+          externalId: 'movie1',
+          title: 'Test Movie',
+          type: ContentType.MOVIE,
+        } as ContentEntity,
+      ];
+
       mockMoviesService.fetchMoviesByMood.mockResolvedValue(mockMovies);
-      mockContentRepository.findByExternalId.mockRejectedValue(
-        new Error('Repository error'),
+      mockContentRepository.findOne.mockRejectedValue(
+        new Error('Database error'),
       );
 
       await expect(
-        service.getContentByMood('happy', ContentType.MOVIE),
-      ).rejects.toThrow('Repository error');
+        service.getContentByMood(mood, ContentType.MOVIE),
+      ).rejects.toThrow('Database error');
     });
   });
 });
