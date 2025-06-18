@@ -18,6 +18,11 @@ export class SaveContentService {
   ) {}
 
   async saveContent(contentId: number, mood: string): Promise<SavedContent> {
+    // Validate mood length
+    if (mood.length > 50) {
+      throw new BadRequestException('Mood must be 50 characters or less');
+    }
+
     // Check if content exists
     const content = await this.contentRepository.findOne({
       where: { id: contentId },
@@ -26,13 +31,13 @@ export class SaveContentService {
       throw new NotFoundException('Content not found');
     }
 
-    // Check if already saved
+    // Check if already saved with same mood
     const existingSave = await this.savedContentRepository.findOne({
-      where: { contentId },
+      where: { contentId, mood },
     });
 
     if (existingSave) {
-      throw new BadRequestException('Content already saved');
+      throw new BadRequestException('Content already saved with this mood');
     }
 
     // Create new saved content
@@ -52,14 +57,16 @@ export class SaveContentService {
   }
 
   async removeSavedContent(contentId: number): Promise<void> {
-    const savedContent = await this.savedContentRepository.findOne({
+    // Check if saved content exists
+    const exists = await this.savedContentRepository.count({
       where: { contentId },
     });
 
-    if (!savedContent) {
+    if (exists === 0) {
       throw new NotFoundException('Saved content not found');
     }
 
-    await this.savedContentRepository.remove(savedContent);
+    // Remove the saved content
+    await this.savedContentRepository.delete({ contentId });
   }
 }
