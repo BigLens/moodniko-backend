@@ -5,6 +5,7 @@ import dataSource from './database/data-source';
 import { MoodModule } from '@modules/mood/mood.module';
 import { ContentsModule } from '@modules/contents/contents.module';
 import { MoviesModule } from '@modules/contents/providers/movies/movies.module';
+import { HealthModule } from './health/health.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -27,6 +28,7 @@ import { AppService } from './app.service';
     MoodModule,
     ContentsModule,
     MoviesModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
