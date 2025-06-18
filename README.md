@@ -74,7 +74,9 @@ npm run start:dev
 
 ---
 
-## **Module Documentation**
+## **Documentation**
+
+### **Module Documentation**
 
 The content module documentation is available in `src/README.md`. This document provides detailed information about:
 
@@ -82,6 +84,21 @@ The content module documentation is available in `src/README.md`. This document 
 - Mood-to-genre mapping
 - Third-party service integrations (Spotify, TMDB, Google Books)
 - API endpoints and usage
+
+### **Database Documentation**
+
+Comprehensive database documentation is available in the `docs/database/` directory:
+
+- **[Database Overview](docs/database/README.md)** - General database design principles and guidelines
+- **[Current Schema](docs/database/current-schema.md)** - Current database structure and relationships
+- **[Saved Contents Schema](docs/database/saved-contents-schema.md)** - Detailed documentation for the saved_contents table
+
+The database follows PostgreSQL best practices with:
+
+- Snake_case naming conventions
+- Proper indexing for performance
+- Foreign key constraints for data integrity
+- Migration-based schema management
 
 ---
 
