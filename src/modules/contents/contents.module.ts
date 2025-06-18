@@ -7,6 +7,7 @@ import { MoviesModule } from './providers/movies/movies.module';
 import { SpotifyModule } from './providers/spotify/spotify.module';
 import { BooksModule } from './providers/books/books.module';
 import { ContentRepository } from './repository/content.repository';
+import { SaveContentModule } from './save_contents/save-content.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ContentRepository } from './repository/content.repository';
     MoviesModule,
     SpotifyModule,
     BooksModule,
+    SaveContentModule,
   ],
   controllers: [ContentsController],
   providers: [ContentsService, ContentRepository],
