@@ -61,7 +61,10 @@ async function bootstrap() {
       )
       .setVersion('1.0')
       .addTag('contents', 'Content management and recommendations')
-      .addTag('saved-contents', 'User saved content operations')
+      .addTag('Saved Contents', 'User saved content operations')
+      .addTag('Books', 'Book recommendations')
+      .addTag('Movies', 'Movie recommendations')
+      .addTag('Spotify', 'Spotify music and podcast recommendations')
       .addTag('health', 'Health check endpoints')
       .build();
 
