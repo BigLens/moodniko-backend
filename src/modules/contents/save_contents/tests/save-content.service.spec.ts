@@ -194,6 +194,7 @@ describe('SaveContentService', () => {
 
       expect(result).toEqual(mockSavedContents);
       expect(mockSavedContentRepository.find).toHaveBeenCalledWith({
+        where: {},
         relations: ['content'],
         order: { createdAt: 'DESC' },
       });
@@ -206,6 +207,7 @@ describe('SaveContentService', () => {
 
       expect(result).toEqual([]);
       expect(mockSavedContentRepository.find).toHaveBeenCalledWith({
+        where: {},
         relations: ['content'],
         order: { createdAt: 'DESC' },
       });
@@ -235,7 +237,7 @@ describe('SaveContentService', () => {
         NotFoundException,
       );
       await expect(service.removeSavedContent(contentId)).rejects.toThrow(
-        'Saved content not found',
+        'Fail deletion because the resource does not exist',
       );
     });
   });
