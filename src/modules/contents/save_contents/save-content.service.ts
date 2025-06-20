@@ -49,24 +49,54 @@ export class SaveContentService {
     return await this.savedContentRepository.save(savedContent);
   }
 
-  async getSavedContents(): Promise<SavedContent[]> {
+  async getSavedContents(
+    mood?: string,
+    contentId?: number,
+  ): Promise<SavedContent[]> {
+    const where: any = {};
+    if (mood) where.mood = mood;
+    if (contentId) where.contentId = contentId;
     return await this.savedContentRepository.find({
+      where,
       relations: ['content'],
       order: { createdAt: 'DESC' },
     });
   }
 
-  async removeSavedContent(contentId: number): Promise<void> {
-    // Check if saved content exists
+  async getSavedContentById(id: number): Promise<SavedContent> {
+    const savedContent = await this.savedContentRepository.findOne({
+      where: { id },
+      relations: ['content'],
+    });
+    if (!savedContent) {
+      throw new NotFoundException('Saved content not found');
+    }
+    return savedContent;
+  }
+
+  async removeSavedContent(contentId: number): Promise<{ message: string }> {
     const exists = await this.savedContentRepository.count({
       where: { contentId },
     });
 
     if (exists === 0) {
-      throw new NotFoundException('Saved content not found');
+      throw new NotFoundException(
+        'Fail deletion because the resource does not exist',
+      );
     }
 
-    // Remove the saved content
     await this.savedContentRepository.delete({ contentId });
+    return { message: 'Resource deleted' };
+  }
+
+  async removeSavedContentById(id: number): Promise<{ message: string }> {
+    const exists = await this.savedContentRepository.count({ where: { id } });
+    if (exists === 0) {
+      throw new NotFoundException(
+        'Fail deletion because the resource does not exist',
+      );
+    }
+    await this.savedContentRepository.delete({ id });
+    return { message: 'Resource deleted' };
   }
 }
