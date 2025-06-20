@@ -1,7 +1,14 @@
 import { Controller, Get, Logger } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import {
+  HealthApiTags,
+  GetHealthDocs,
+  GetReadinessDocs,
+  GetLivenessDocs,
+} from './docs/health.doc';
 
+@HealthApiTags()
 @Controller('health')
 export class HealthController {
   private readonly logger = new Logger(HealthController.name);
@@ -12,6 +19,7 @@ export class HealthController {
   ) {}
 
   @Get()
+  @GetHealthDocs()
   async check() {
     const startTime = Date.now();
     this.logger.log('Health check requested');
@@ -52,6 +60,7 @@ export class HealthController {
   }
 
   @Get('ready')
+  @GetReadinessDocs()
   async readiness() {
     this.logger.log('Readiness check requested');
 
@@ -72,6 +81,7 @@ export class HealthController {
   }
 
   @Get('live')
+  @GetLivenessDocs()
   liveness() {
     this.logger.log('Liveness check requested');
     return { status: 'alive', timestamp: new Date().toISOString() };
