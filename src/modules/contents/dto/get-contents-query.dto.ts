@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { ContentType } from '../enum/content.enum';
+import { ContentType } from '@modules/contents/enum/content.enum';
 
 export class GetContentsQueryDto {
   @IsNotEmpty()

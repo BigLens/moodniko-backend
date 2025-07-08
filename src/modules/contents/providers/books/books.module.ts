@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { BooksService } from './books.service';
+import { BooksService } from '@modules/contents/providers/books/books.service';
 import { HttpModule } from '@nestjs/axios';
-import { BooksController } from './books.controller';
+import { BooksController } from '@modules/contents/providers/books/books.controller';
 
 @Module({
-  //imports required for the BooksModule
   imports: [HttpModule],
   controllers: [BooksController],
   providers: [BooksService],

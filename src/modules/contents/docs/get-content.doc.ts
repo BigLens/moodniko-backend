@@ -1,6 +1,6 @@
 import { ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
-import { ContentEntity } from '../model/content.entity';
-import { ContentType } from '../enum/content.enum';
+import { ContentEntity } from '@modules/contents/model/content.entity';
+import { ContentType } from '@modules/contents/enum/content.enum';
 
 export const GetContentDoc = () => {
   return function (
