@@ -1,0 +1,16 @@
+export enum Mood {
+  HAPPY = 'happy',
+  EXCITED = 'excited',
+  INSPIRED = 'inspired',
+  PEACEFUL = 'peaceful',
+  SAD = 'sad',
+  MOODY = 'moody',
+  ANXIOUS = 'anxious',
+  STRESSED = 'stressed',
+  BORED = 'bored',
+  LONELY = 'lonely',
+  ANGRY = 'angry',
+  TIRED = 'tired',
+  CONFUSED = 'confused',
+  SCARED = 'scared',
+}

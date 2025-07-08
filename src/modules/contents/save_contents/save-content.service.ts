@@ -7,6 +7,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SavedContent } from './save-content.entity';
 import { ContentEntity } from '../model/content.entity';
+import { CreateSavedContentDto } from './dto/create-saved-content.dto';
+import { GetSavedContentsQueryDto } from './dto/get-saved-contents-query.dto';
 
 @Injectable()
 export class SaveContentService {
@@ -17,8 +19,11 @@ export class SaveContentService {
     private readonly contentRepository: Repository<ContentEntity>,
   ) {}
 
-  async saveContent(contentId: number, mood: string): Promise<SavedContent> {
-    // Validate mood length
+  async saveContent(
+    createSavedContentDto: CreateSavedContentDto,
+  ): Promise<SavedContent> {
+    const { contentId, mood } = createSavedContentDto;
+    // Validate mood length - this is now handled by the enum, but we can keep it as a safeguard
     if (mood.length > 50) {
       throw new BadRequestException('Mood must be 50 characters or less');
     }
@@ -50,17 +55,29 @@ export class SaveContentService {
   }
 
   async getSavedContents(
-    mood?: string,
-    contentId?: number,
+    query: GetSavedContentsQueryDto,
   ): Promise<SavedContent[]> {
-    const where: any = {};
-    if (mood) where.mood = mood;
-    if (contentId) where.contentId = contentId;
-    return await this.savedContentRepository.find({
-      where,
-      relations: ['content'],
-      order: { createdAt: 'DESC' },
-    });
+    const { mood, contentType, page = 1, limit = 10 } = query;
+    const skip = (page - 1) * limit;
+
+    const queryBuilder =
+      this.savedContentRepository.createQueryBuilder('savedContent');
+
+    queryBuilder
+      .leftJoinAndSelect('savedContent.content', 'content')
+      .orderBy('savedContent.createdAt', 'DESC')
+      .skip(skip)
+      .take(limit);
+
+    if (mood) {
+      queryBuilder.andWhere('savedContent.mood = :mood', { mood });
+    }
+
+    if (contentType) {
+      queryBuilder.andWhere('content.type = :contentType', { contentType });
+    }
+
+    return await queryBuilder.getMany();
   }
 
   async getSavedContentById(id: number): Promise<SavedContent> {

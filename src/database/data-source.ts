@@ -2,6 +2,8 @@ import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
 import { globSync } from 'glob';
 import { SnakeNamingStrategy } from '@utils/snake_snake';
+import { ContentEntity } from '@modules/contents/model/content.entity';
+import { SavedContent } from '@modules/contents/save_contents/save-content.entity';
 
 config({ path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env' });
 
@@ -13,7 +15,13 @@ const dataSource = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   synchronize: false,
-  entities: globSync(process.env.DB_ENTITIES || 'src/**/*.entity.{ts,js}'),
+  entities: [
+    ContentEntity,
+    SavedContent,
+    ...(globSync(
+      process.env.DB_ENTITIES || 'src/**/*.entity.{ts,js}',
+    ) as any[]),
+  ],
   namingStrategy: new SnakeNamingStrategy(),
   migrations: globSync(
     process.env.DB_MIGRATIONS || 'src/database/migrations/*.{ts,js}',

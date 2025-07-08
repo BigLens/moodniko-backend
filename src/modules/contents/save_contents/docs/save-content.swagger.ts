@@ -7,8 +7,18 @@ import {
   ApiTags,
   ApiQuery,
 } from '@nestjs/swagger';
+import { CreateSavedContentDto } from '../dto/create-saved-content.dto';
+import { Mood } from '../enum/mood.enum';
+import { ContentType } from '../../enum/content.enum';
 
 const exampleSavedContent = {
+  id: 1,
+  contentId: 42,
+  mood: 'happy',
+  createdAt: '2024-06-01T12:00:00.000Z',
+};
+
+const exampleSavedContentWithDetails = {
   id: 1,
   contentId: 42,
   mood: 'happy',
@@ -37,22 +47,11 @@ export const SaveContentDocs = () =>
         'Saves a content item for a specific mood. Fails if already saved with the same mood or if the content does not exist.',
     }),
     ApiBody({
-      schema: {
-        type: 'object',
-        properties: {
-          contentId: { type: 'number', example: 42 },
-          mood: { type: 'string', example: 'happy', maxLength: 50 },
-        },
-        required: ['contentId', 'mood'],
-      },
+      type: CreateSavedContentDto,
       examples: {
         valid: {
           summary: 'Valid request',
-          value: { contentId: 42, mood: 'happy' },
-        },
-        tooLongMood: {
-          summary: 'Mood too long',
-          value: { contentId: 42, mood: 'a'.repeat(51) },
+          value: { contentId: 42, mood: Mood.HAPPY },
         },
       },
     }),
@@ -64,14 +63,17 @@ export const SaveContentDocs = () =>
     ApiResponse({
       status: 400,
       description:
-        'Bad Request - Mood too long or content already saved with this mood',
+        'Bad Request - Invalid input data, such as invalid mood or contentId.',
       schema: {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 400 },
           message: {
-            type: 'string',
-            example: 'Mood must be 50 characters or less',
+            type: 'array',
+            items: {
+              type: 'string',
+              example: 'mood must be a valid enum value',
+            },
           },
           error: { type: 'string', example: 'Bad Request' },
         },
@@ -94,43 +96,53 @@ export const SaveContentDocs = () =>
 export const GetSavedContentsDocs = () =>
   applyDecorators(
     ApiOperation({
-      summary: 'Get all saved contents',
+      summary: 'Get all saved contents with pagination and filtering',
       description:
-        'Retrieves all saved content items, ordered by creation date (most recent first). Supports optional filtering by mood and contentId.',
+        'Retrieves a paginated list of saved content items, ordered by creation date. Supports filtering by mood and content type.',
     }),
     ApiQuery({
       name: 'mood',
       required: false,
-      type: String,
-      description: 'Filter saved contents by mood',
-      example: 'happy',
+      enum: Mood,
+      description: 'Filter saved contents by mood.',
+      example: Mood.HAPPY,
     }),
     ApiQuery({
-      name: 'contentId',
+      name: 'contentType',
+      required: false,
+      enum: ContentType,
+      description: 'Filter by content type.',
+      example: ContentType.MOVIE,
+    }),
+    ApiQuery({
+      name: 'page',
       required: false,
       type: Number,
-      description: 'Filter saved contents by contentId',
-      example: 42,
+      description: 'Page number for pagination.',
+      example: 1,
+    }),
+    ApiQuery({
+      name: 'limit',
+      required: false,
+      type: Number,
+      description: 'Number of items per page.',
+      example: 10,
     }),
     ApiResponse({
       status: 200,
-      description: 'List of saved contents',
+      description: 'A paginated list of saved contents.',
       schema: {
         type: 'array',
-        items: { type: 'object', example: exampleSavedContent },
+        items: { type: 'object', example: exampleSavedContentWithDetails },
       },
+    }),
+    ApiResponse({
+      status: 400,
+      description: 'Bad Request - Invalid query parameters.',
     }),
     ApiResponse({
       status: 500,
       description: 'Internal server error',
-      schema: {
-        type: 'object',
-        properties: {
-          statusCode: { type: 'number', example: 500 },
-          message: { type: 'string', example: 'Internal server error' },
-          error: { type: 'string', example: 'Internal Server Error' },
-        },
-      },
     }),
   );
 
@@ -149,7 +161,7 @@ export const GetSavedContentByIdDocs = () =>
     ApiResponse({
       status: 200,
       description: 'Saved content found',
-      schema: { type: 'object', example: exampleSavedContent },
+      schema: { type: 'object', example: exampleSavedContentWithDetails },
     }),
     ApiResponse({
       status: 404,
