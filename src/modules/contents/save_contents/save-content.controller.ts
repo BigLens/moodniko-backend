@@ -18,6 +18,8 @@ import {
   GetSavedContentByIdDocs,
   RemoveSavedContentByIdDocs,
 } from './docs/save-content.swagger';
+import { CreateSavedContentDto } from './dto/create-saved-content.dto';
+import { GetSavedContentsQueryDto } from './dto/get-saved-contents-query.dto';
 
 @SavedContentApiTags()
 @Controller('contents/saved-contents')
@@ -27,19 +29,17 @@ export class SaveContentController {
   @Post()
   @SaveContentDocs()
   async saveContent(
-    @Body('contentId') contentId: number,
-    @Body('mood') mood: string,
+    @Body() createSavedContentDto: CreateSavedContentDto,
   ): Promise<SavedContent> {
-    return await this.saveContentService.saveContent(contentId, mood);
+    return await this.saveContentService.saveContent(createSavedContentDto);
   }
 
   @Get()
   @GetSavedContentsDocs()
   async getSavedContents(
-    @Query('mood') mood?: string,
-    @Query('contentId') contentId?: number,
+    @Query() query: GetSavedContentsQueryDto,
   ): Promise<SavedContent[]> {
-    return await this.saveContentService.getSavedContents(mood, contentId);
+    return await this.saveContentService.getSavedContents(query);
   }
 
   @Get(':id')

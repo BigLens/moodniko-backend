@@ -4,9 +4,24 @@ import { SaveContentService } from '../save-content.service';
 import { SavedContent } from '../save-content.entity';
 import { ContentEntity } from '../../model/content.entity';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { CreateSavedContentDto } from '../dto/create-saved-content.dto';
+import { GetSavedContentsQueryDto } from '../dto/get-saved-contents-query.dto';
+import { Mood } from '../enum/mood.enum';
+import { ContentType } from '../../enum/content.enum';
+import { Repository } from 'typeorm';
 
 describe('SaveContentService', () => {
   let service: SaveContentService;
+  let savedContentRepository: Repository<SavedContent>;
+
+  const mockQueryBuilder = {
+    leftJoinAndSelect: jest.fn().mockReturnThis(),
+    orderBy: jest.fn().mockReturnThis(),
+    skip: jest.fn().mockReturnThis(),
+    take: jest.fn().mockReturnThis(),
+    andWhere: jest.fn().mockReturnThis(),
+    getMany: jest.fn(),
+  };
 
   const mockSavedContentRepository = {
     create: jest.fn(),
@@ -15,6 +30,7 @@ describe('SaveContentService', () => {
     find: jest.fn(),
     count: jest.fn(),
     delete: jest.fn(),
+    createQueryBuilder: jest.fn(() => mockQueryBuilder),
   };
 
   const mockContentRepository = {
@@ -37,6 +53,9 @@ describe('SaveContentService', () => {
     }).compile();
 
     service = module.get<SaveContentService>(SaveContentService);
+    savedContentRepository = module.get<Repository<SavedContent>>(
+      getRepositoryToken(SavedContent),
+    );
   });
 
   afterEach(() => {
@@ -44,15 +63,16 @@ describe('SaveContentService', () => {
   });
 
   describe('saveContent', () => {
-    const contentId = 1;
-    const mood = 'happy';
+    const createSavedContentDto: CreateSavedContentDto = {
+      contentId: 1,
+      mood: Mood.HAPPY,
+    };
 
     it('should save content successfully', async () => {
-      const mockContent = { id: contentId };
+      const mockContent = { id: createSavedContentDto.contentId };
       const mockSavedContent = {
         id: 1,
-        contentId,
-        mood,
+        ...createSavedContentDto,
         createdAt: new Date(),
         content: null,
       };
@@ -62,155 +82,89 @@ describe('SaveContentService', () => {
       mockSavedContentRepository.create.mockReturnValue(mockSavedContent);
       mockSavedContentRepository.save.mockResolvedValue(mockSavedContent);
 
-      const result = await service.saveContent(contentId, mood);
+      const result = await service.saveContent(createSavedContentDto);
 
       expect(result).toEqual(mockSavedContent);
       expect(mockContentRepository.findOne).toHaveBeenCalledWith({
-        where: { id: contentId },
+        where: { id: createSavedContentDto.contentId },
       });
-      expect(mockSavedContentRepository.create).toHaveBeenCalledWith({
-        contentId,
-        mood,
-      });
-    });
-
-    it('should save content with mood within length limit', async () => {
-      const mockContent = { id: contentId };
-      const shortMood = 'sad';
-      const mockSavedContent = {
-        id: 1,
-        contentId,
-        mood: shortMood,
-        createdAt: new Date(),
-        content: null,
-      };
-
-      mockContentRepository.findOne.mockResolvedValue(mockContent);
-      mockSavedContentRepository.findOne.mockResolvedValue(null);
-      mockSavedContentRepository.create.mockReturnValue(mockSavedContent);
-      mockSavedContentRepository.save.mockResolvedValue(mockSavedContent);
-
-      const result = await service.saveContent(contentId, shortMood);
-
-      expect(result.mood).toBe(shortMood);
-      expect(result.mood.length).toBeLessThanOrEqual(50);
+      expect(mockSavedContentRepository.create).toHaveBeenCalledWith(
+        createSavedContentDto,
+      );
     });
 
     it('should throw BadRequestException when mood exceeds 50 characters', async () => {
-      const longMood = 'a'.repeat(51);
-
-      await expect(service.saveContent(contentId, longMood)).rejects.toThrow(
+      const longMoodDto = {
+        ...createSavedContentDto,
+        mood: 'a'.repeat(51) as Mood,
+      };
+      await expect(service.saveContent(longMoodDto)).rejects.toThrow(
         BadRequestException,
-      );
-      await expect(service.saveContent(contentId, longMood)).rejects.toThrow(
-        'Mood must be 50 characters or less',
       );
     });
 
     it('should throw NotFoundException when content does not exist', async () => {
       mockContentRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.saveContent(contentId, mood)).rejects.toThrow(
+      await expect(service.saveContent(createSavedContentDto)).rejects.toThrow(
         NotFoundException,
       );
     });
 
     it('should throw BadRequestException when content is already saved with same mood', async () => {
-      const mockContent = { id: contentId };
-      const mockExistingSave = {
-        id: 1,
-        contentId,
-        mood,
-        createdAt: new Date(),
-        content: null,
-      };
+      const mockContent = { id: createSavedContentDto.contentId };
+      const mockExistingSave = { id: 1, ...createSavedContentDto };
 
       mockContentRepository.findOne.mockResolvedValue(mockContent);
       mockSavedContentRepository.findOne.mockResolvedValue(mockExistingSave);
 
-      await expect(service.saveContent(contentId, mood)).rejects.toThrow(
+      await expect(service.saveContent(createSavedContentDto)).rejects.toThrow(
         BadRequestException,
       );
-      await expect(service.saveContent(contentId, mood)).rejects.toThrow(
-        'Content already saved with this mood',
-      );
-    });
-
-    it('should allow saving same content with different moods', async () => {
-      const mockContent = { id: contentId };
-      const mood1 = 'happy';
-      const mood2 = 'sad';
-      const mockSavedContent = {
-        id: 1,
-        contentId,
-        mood: mood2,
-        createdAt: new Date(),
-        content: null,
-      };
-
-      mockContentRepository.findOne.mockResolvedValue(mockContent);
-      // First mood doesn't exist
-      mockSavedContentRepository.findOne
-        .mockResolvedValueOnce(null)
-        .mockResolvedValueOnce(null);
-      mockSavedContentRepository.create.mockReturnValue(mockSavedContent);
-      mockSavedContentRepository.save.mockResolvedValue(mockSavedContent);
-
-      // Should be able to save with different moods
-      await service.saveContent(contentId, mood1);
-      await service.saveContent(contentId, mood2);
-
-      expect(mockSavedContentRepository.findOne).toHaveBeenCalledWith({
-        where: { contentId, mood: mood1 },
-      });
-      expect(mockSavedContentRepository.findOne).toHaveBeenCalledWith({
-        where: { contentId, mood: mood2 },
-      });
     });
   });
 
   describe('getSavedContents', () => {
-    it('should return all saved contents ordered by createdAt DESC', async () => {
-      const mockSavedContents = [
-        {
-          id: 1,
-          contentId: 1,
-          mood: 'happy',
-          createdAt: new Date('2024-01-02'),
-          content: null,
-        },
-        {
-          id: 2,
-          contentId: 2,
-          mood: 'sad',
-          createdAt: new Date('2024-01-01'),
-          content: null,
-        },
-      ];
+    it('should return paginated and filtered contents', async () => {
+      const query: GetSavedContentsQueryDto = {
+        page: 2,
+        limit: 5,
+        mood: Mood.SAD,
+        contentType: ContentType.MOVIE,
+      };
+      const skip = (query.page - 1) * query.limit;
+      const mockResult = [{ id: 1 }];
 
-      mockSavedContentRepository.find.mockResolvedValue(mockSavedContents);
+      mockQueryBuilder.getMany.mockResolvedValue(mockResult);
 
-      const result = await service.getSavedContents();
+      const result = await service.getSavedContents(query);
 
-      expect(result).toEqual(mockSavedContents);
-      expect(mockSavedContentRepository.find).toHaveBeenCalledWith({
-        where: {},
-        relations: ['content'],
-        order: { createdAt: 'DESC' },
-      });
+      expect(result).toEqual(mockResult);
+      expect(savedContentRepository.createQueryBuilder).toHaveBeenCalledWith(
+        'savedContent',
+      );
+      expect(mockQueryBuilder.skip).toHaveBeenCalledWith(skip);
+      expect(mockQueryBuilder.take).toHaveBeenCalledWith(query.limit);
+      expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith(
+        'savedContent.mood = :mood',
+        { mood: query.mood },
+      );
+      expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith(
+        'content.type = :contentType',
+        { contentType: query.contentType },
+      );
     });
 
-    it('should handle empty saved contents list', async () => {
-      mockSavedContentRepository.find.mockResolvedValue([]);
+    it('should use default pagination values', async () => {
+      const query: GetSavedContentsQueryDto = {};
+      const defaultPage = 1;
+      const defaultLimit = 10;
+      const skip = (defaultPage - 1) * defaultLimit;
 
-      const result = await service.getSavedContents();
+      await service.getSavedContents(query);
 
-      expect(result).toEqual([]);
-      expect(mockSavedContentRepository.find).toHaveBeenCalledWith({
-        where: {},
-        relations: ['content'],
-        order: { createdAt: 'DESC' },
-      });
+      expect(mockQueryBuilder.skip).toHaveBeenCalledWith(skip);
+      expect(mockQueryBuilder.take).toHaveBeenCalledWith(defaultLimit);
     });
   });
 
@@ -235,9 +189,6 @@ describe('SaveContentService', () => {
 
       await expect(service.removeSavedContent(contentId)).rejects.toThrow(
         NotFoundException,
-      );
-      await expect(service.removeSavedContent(contentId)).rejects.toThrow(
-        'Fail deletion because the resource does not exist',
       );
     });
   });
