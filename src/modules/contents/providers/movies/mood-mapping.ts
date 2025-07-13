@@ -161,12 +161,3 @@ export const emotionalImpactParams: Record<string, any> = {
     with_original_language: 'en',
   },
 };
-
-export const moodToKeywordMap: Record<string, number[]> = {
-  happy: [1741, 1742],
-  sad: [1743, 1744],
-  excited: [1745, 1746],
-  relaxed: [1747, 1748],
-  scared: [1749, 1750],
-  inspired: [1751, 1752],
-};
