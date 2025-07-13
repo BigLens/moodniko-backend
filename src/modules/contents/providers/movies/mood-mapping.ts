@@ -1,4 +1,3 @@
-// TMDB Genre IDs mapping
 export const TMDB_GENRES = {
   ACTION: 28,
   ADVENTURE: 12,
