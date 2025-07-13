@@ -1,5 +1,5 @@
 import { ContentEntity } from '@modules/contents/model/content.entity';
-import { TmdbMovie } from './interface/movie.interface';
+import { TmdbMovie } from '@modules/contents/providers/movies/interface/movie.interface';
 import { ContentType } from '@modules/contents/enum/content.enum';
 
 export function mapToContentEntity(

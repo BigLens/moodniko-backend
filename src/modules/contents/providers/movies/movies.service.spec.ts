@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/axios';
-import { MoviesService } from './movies.service';
+import { MoviesService } from '@modules/contents/providers/movies/movies.service';
 import { ContentType } from '@modules/contents/enum/content.enum';
 import { of, throwError } from 'rxjs';
 import { AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
