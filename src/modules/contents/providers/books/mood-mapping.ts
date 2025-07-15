@@ -54,4 +54,3 @@ export const moodToGenreMap: Record<string, { genres: string[] }> = {
     genres: ['thriller', 'horror', 'psychological fiction', 'self-help'],
   },
 };
-//mappers

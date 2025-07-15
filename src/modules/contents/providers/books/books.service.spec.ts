@@ -1,14 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/axios';
 import { of, throwError } from 'rxjs';
-import { BooksService } from './books.service';
+import { BooksService } from '@modules/contents/providers/books/books.service';
 import { ContentType } from '@modules/contents/enum/content.enum';
 import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
 
-// Mocking the ContentEntity class
 describe('BooksService', () => {
   let service: BooksService;
 
@@ -124,7 +123,6 @@ describe('BooksService', () => {
         of({ data: mockGoogleBooksResponse }),
       );
 
-      // First request
       await service.fetchBooksByMood('happy');
       // Second request should use cache
       await service.fetchBooksByMood('happy');

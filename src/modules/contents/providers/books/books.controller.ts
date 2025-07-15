@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { BooksService } from './books.service';
-import { ApiGetBooksByMood } from './docs/book-docs';
+import { BooksService } from '@modules/contents/providers/books/books.service';
+import { ApiGetBooksByMood } from '@modules/contents/providers/books/docs/book-docs';
 
 @Controller('books')
 export class BooksController {

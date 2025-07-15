@@ -1,5 +1,5 @@
 import { ContentEntity } from '@modules/contents/model/content.entity';
-import { GoogleBook } from './interface/books.interface';
+import { GoogleBook } from '@modules/contents/providers/books/interface/books.interface';
 import { ContentType } from '@modules/contents/enum/content.enum';
 
 export function mapToContentEntity(
@@ -15,5 +15,5 @@ export function mapToContentEntity(
   entity.type = type;
   entity.moodtag = mood;
 
-  return entity; // Return the mapped entity
+  return entity;
 }

@@ -7,9 +7,9 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, timeout } from 'rxjs';
 import { ContentEntity } from '@modules/contents/model/content.entity';
 import { ContentType } from '@modules/contents/enum/content.enum';
-import { mapToContentEntity } from './books.mapper';
-import { GoogleBooksResponse } from './interface/books.interface';
-import { moodToGenreMap } from './mood-mapping';
+import { mapToContentEntity } from '@modules/contents/providers/books/books.mapper';
+import { GoogleBooksResponse } from '@modules/contents/providers/books/interface/books.interface';
+import { moodToGenreMap } from '@modules/contents/providers/books/mood-mapping';
 
 @Injectable()
 export class BooksService {
