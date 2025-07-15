@@ -6,18 +6,18 @@ import {
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, timeout } from 'rxjs';
 import { ContentEntity } from '@modules/contents/model/content.entity';
-import { SpotifyContentType } from './enum/spotify-content.enum';
+import { SpotifyContentType } from '@modules/contents/providers/spotify/enum/spotify-content.enum';
 import {
   mapTrackToContentEntity,
   mapPodcastToContentEntity,
-} from './spotify.mapper';
+} from '@modules/contents/providers/spotify/spotify.mapper';
 import {
   SpotifyTrack,
   SpotifyPodcast,
   SpotifyAuthResponse,
   SpotifySearchResponse,
-} from './interface/spotify.interface';
-import { moodToGenreMap } from './mood-mapping';
+} from '@modules/contents/providers/spotify/interface/spotify.interface';
+import { moodToGenreMap } from '@modules/contents/providers/spotify/mood-mapping';
 import { ContentType } from '@modules/contents/enum/content.enum';
 
 @Injectable()

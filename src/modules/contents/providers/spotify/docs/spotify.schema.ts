@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SpotifyContentType } from '../enum/spotify-content.enum';
+import { SpotifyContentType } from '@modules/contents/providers/spotify/enum/spotify-content.enum';
 
 export class SpotifyContentResponse {
   @ApiProperty({
