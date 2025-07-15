@@ -1,5 +1,5 @@
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SpotifyContentType } from '../enum/spotify-content.enum';
+import { SpotifyContentType } from '@modules/contents/providers/spotify/enum/spotify-content.enum';
 
 export const ApiSpotifyContent = () => {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {

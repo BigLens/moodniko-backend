@@ -1,5 +1,5 @@
 import { ContentType } from '@modules/contents/enum/content.enum';
-import { SpotifyContentType } from '../enum/spotify-content.enum';
+import { SpotifyContentType } from '@modules/contents/providers/spotify/enum/spotify-content.enum';
 
 export const mapContentTypeToSpotifyType = (
   type?: ContentType,

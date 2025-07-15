@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { of, throwError } from 'rxjs';
 import { SpotifyService } from './spotify.service';
 import { ContentType } from '@modules/contents/enum/content.enum';
-import { SpotifyContentType } from './enum/spotify-content.enum';
+import { SpotifyContentType } from '@modules/contents/providers/spotify/enum/spotify-content.enum';
 import {
   InternalServerErrorException,
   BadRequestException,

@@ -1,8 +1,8 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { SpotifyService } from './spotify.service';
+import { SpotifyService } from '@modules/contents/providers/spotify/spotify.service';
 import { ContentEntity } from '@modules/contents/model/content.entity';
 import { ContentType } from '@modules/contents/enum/content.enum';
-import { ApiSpotifyContent } from './docs/spotify.swagger';
+import { ApiSpotifyContent } from '@modules/contents/providers/spotify/docs/spotify.swagger';
 import { mapContentTypeToSpotifyType } from './mappers/spotify-type.mapper';
 
 @Controller('spotify')
