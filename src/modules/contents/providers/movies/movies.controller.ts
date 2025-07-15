@@ -1,6 +1,9 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { MoviesService } from '@modules/contents/providers/movies/movies.service';
-import { MovieApiTags, GetMoviesByMoodDocs } from '@modules/contents/providers/movies/docs/movie-docs';
+import {
+  MovieApiTags,
+  GetMoviesByMoodDocs,
+} from '@modules/contents/providers/movies/docs/movie-docs';
 
 @Controller('movies')
 @MovieApiTags()

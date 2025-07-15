@@ -9,7 +9,10 @@ import { ContentEntity } from '@modules/contents/model/content.entity';
 import { ContentType } from '@modules/contents/enum/content.enum';
 import { mapToContentEntity } from '@modules/contents/providers/movies/movies.mapper';
 import { TmdbMovie } from '@modules/contents/providers/movies/interface/movie.interface';
-import { moodToGenreMap, emotionalImpactParams } from '@modules/contents/providers/movies/mood-mapping';
+import {
+  moodToGenreMap,
+  emotionalImpactParams,
+} from '@modules/contents/providers/movies/mood-mapping';
 
 @Injectable()
 export class MoviesService {
