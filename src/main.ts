@@ -60,6 +60,7 @@ async function bootstrap() {
         'Mood-based content recommendation APIs for movies, music, podcasts, and books',
       )
       .setVersion('1.0')
+      .addTag('auth', 'User login')
       .addTag('contents', 'Content management and recommendations')
       .addTag('Saved Contents', 'User saved content operations')
       .addTag('Books', 'Book recommendations')
