@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  Unique,
+  OneToMany,
+} from 'typeorm';
 import { BaseEntity } from '@entities/base-entity';
+import { MoodEntity } from '@modules/mood/entity/mood.entity';
 
 @Entity('users')
 @Unique(['email'])
@@ -11,5 +18,8 @@ export class UserEntity extends BaseEntity {
   email: string;
 
   @Column()
-  password: string; // Hashing will be handled in the service layer
+  password: string;
+
+  @OneToMany(() => MoodEntity, (mood) => mood.user)
+  moods: MoodEntity[];
 }
