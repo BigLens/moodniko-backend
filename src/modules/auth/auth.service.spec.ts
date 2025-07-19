@@ -1,14 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { JwtService } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
+import { JwtService } from '@nestjs/jwt';
+import { UserService } from '@modules/user/user.service';
 
 describe('AuthService', () => {
   let service: AuthService;
   let jwtService: JwtService;
 
   const mockJwtService = {
-    sign: jest.fn(),
-    decode: jest.fn(),
+    sign: jest.fn().mockReturnValue('mocked.jwt.token'),
+    decode: jest
+      .fn()
+      .mockReturnValue({ sub: 'user123', email: 'test@example.com' }),
   };
 
   beforeEach(async () => {
@@ -18,6 +21,14 @@ describe('AuthService', () => {
         {
           provide: JwtService,
           useValue: mockJwtService,
+        },
+        {
+          provide: UserService,
+          useValue: {
+            findByEmail: jest.fn(),
+            createUser: jest.fn(),
+            updateUser: jest.fn(),
+          },
         },
       ],
     }).compile();

@@ -7,6 +7,7 @@ import { ContentsModule } from '@modules/contents/contents.module';
 import { MoviesModule } from '@modules/contents/providers/movies/movies.module';
 import { HealthModule } from './health/health.module';
 import { AuthModule } from '@modules/auth/auth.module';
+import { UserModule } from '@modules/user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -31,6 +32,7 @@ import { AppService } from './app.service';
     MoviesModule,
     HealthModule,
     AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
