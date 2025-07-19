@@ -4,6 +4,7 @@ import { globSync } from 'glob';
 import { SnakeNamingStrategy } from '@utils/snake_snake';
 import { ContentEntity } from '@modules/contents/model/content.entity';
 import { SavedContent } from '@modules/contents/save_contents/save-content.entity';
+import { UserEntity } from '@modules/user/entity/user.entity';
 
 config({ path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env' });
 
@@ -18,6 +19,7 @@ const dataSource = new DataSource({
   entities: [
     ContentEntity,
     SavedContent,
+    UserEntity,
     ...(globSync(
       process.env.DB_ENTITIES || 'src/**/*.entity.{ts,js}',
     ) as any[]),
