@@ -7,9 +7,9 @@
   "license": "UNLICENSED",
   "scripts": {
     "migration:create": "npx typeorm migration:create",
-    "migration:run": "npx typeorm migration:run -d dist/database/data-source",
-    "migration:generate": "npx typeorm migration:generate -d dist/database/data-source",
-    "migration:revert": "npx typeorm migration:revert -d dist/database/data-source",
+    "migration:run": "npx typeorm migration:run -d dist/src/database/data-source",
+    "migration:generate": "npx typeorm migration:generate -d dist/src/database/data-source",
+    "migration:revert": "npx typeorm migration:revert -d dist/src/database/data-source",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
