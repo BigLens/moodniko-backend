@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { MoodDto } from '@modules/mood/dto/mood.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MoodEntity } from '@modules/mood/entity/mood.entity';
+import { UserEntity } from '@modules/user/entity/user.entity';
 
 @Injectable()
 export class MoodService {
@@ -11,35 +12,42 @@ export class MoodService {
     private moodRepo: Repository<MoodEntity>,
   ) {}
 
-  async createMood(dto: MoodDto): Promise<MoodEntity> {
-    const feeling = await this.moodRepo.create({
+  async createMood(dto: MoodDto, user: UserEntity): Promise<MoodEntity> {
+    const feeling = this.moodRepo.create({
       feeling: dto.feeling,
+      user,
     });
-    const saveFeeling = await this.moodRepo.save(feeling);
-    return saveFeeling;
+    return await this.moodRepo.save(feeling);
   }
 
-  async findAllMood(): Promise<MoodEntity[]> {
-    return await this.moodRepo.find();
+  async findAllMood(user: UserEntity): Promise<MoodEntity[]> {
+    return await this.moodRepo.find({ where: { user: { id: user.id } } });
   }
 
-  async findMoodById(id: number): Promise<MoodEntity> {
-    const mood = await this.moodRepo.findOne({ where: { id } });
+  async findMoodById(id: number, user: UserEntity): Promise<MoodEntity> {
+    const mood = await this.moodRepo.findOne({
+      where: { id, user: { id: user.id } },
+    });
     if (!mood) {
       throw new NotFoundException('Mood not found');
     }
     return mood;
   }
 
-  async updateMood(id: number, dto: MoodDto): Promise<MoodEntity> {
-    const mood = await this.findMoodById(id);
+  async updateMood(
+    id: number,
+    dto: MoodDto,
+    user: UserEntity,
+  ): Promise<MoodEntity> {
+    const mood = await this.findMoodById(id, user);
     mood.feeling = dto.feeling;
     return await this.moodRepo.save(mood);
   }
 
-  async deleteMood(id: number): Promise<{ message: string }> {
-    const mood = await this.moodRepo.delete(id);
-    if (!mood.affected) {
+  async deleteMood(id: number, user: UserEntity): Promise<{ message: string }> {
+    const mood = await this.findMoodById(id, user);
+    const result = await this.moodRepo.delete(mood.id);
+    if (!result.affected) {
       throw new NotFoundException('Mood not found');
     }
     return { message: 'Mood deleted successfully' };
