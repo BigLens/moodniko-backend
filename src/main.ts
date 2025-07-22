@@ -67,6 +67,15 @@ async function bootstrap() {
       .addTag('Movies', 'Movie recommendations')
       .addTag('Spotify', 'Spotify music and podcast recommendations')
       .addTag('health', 'Health check endpoints')
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'Paste your JWT token here',
+        },
+        'JWT-auth',
+      )
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
