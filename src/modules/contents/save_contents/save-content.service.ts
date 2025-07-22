@@ -95,7 +95,10 @@ export class SaveContentService {
     return savedContent;
   }
 
-  async removeSavedContent(contentId: number, userId: number): Promise<{ message: string }> {
+  async removeSavedContent(
+    contentId: number,
+    userId: number,
+  ): Promise<{ message: string }> {
     const exists = await this.savedContentRepository.count({
       where: { contentId, userId },
     });
@@ -110,8 +113,13 @@ export class SaveContentService {
     return { message: 'Resource deleted' };
   }
 
-  async removeSavedContentById(id: number, userId: number): Promise<{ message: string }> {
-    const exists = await this.savedContentRepository.count({ where: { id, userId } });
+  async removeSavedContentById(
+    id: number,
+    userId: number,
+  ): Promise<{ message: string }> {
+    const exists = await this.savedContentRepository.count({
+      where: { id, userId },
+    });
     if (exists === 0) {
       throw new NotFoundException(
         'Fail deletion because the resource does not exist',

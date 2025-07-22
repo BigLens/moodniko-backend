@@ -38,7 +38,10 @@ export class SaveContentController {
     @Body() createSavedContentDto: CreateSavedContentDto,
     @Request() req,
   ): Promise<SavedContent> {
-    return await this.saveContentService.saveContent(createSavedContentDto, req.user.userId);
+    return await this.saveContentService.saveContent(
+      createSavedContentDto,
+      req.user.userId,
+    );
   }
 
   @Get()
@@ -47,7 +50,10 @@ export class SaveContentController {
     @Query() query: GetSavedContentsQueryDto,
     @Request() req,
   ): Promise<SavedContent[]> {
-    return await this.saveContentService.getSavedContents(query, req.user.userId);
+    return await this.saveContentService.getSavedContents(
+      query,
+      req.user.userId,
+    );
   }
 
   @Get(':id')
@@ -56,7 +62,10 @@ export class SaveContentController {
     @Param('id') id: number,
     @Request() req,
   ): Promise<SavedContent> {
-    return await this.saveContentService.getSavedContentById(id, req.user.userId);
+    return await this.saveContentService.getSavedContentById(
+      id,
+      req.user.userId,
+    );
   }
 
   @Delete(':contentId')
@@ -66,7 +75,10 @@ export class SaveContentController {
     @Param('contentId') contentId: number,
     @Request() req,
   ): Promise<{ message: string }> {
-    return await this.saveContentService.removeSavedContent(contentId, req.user.userId);
+    return await this.saveContentService.removeSavedContent(
+      contentId,
+      req.user.userId,
+    );
   }
 
   @Delete('by-id/:id')
@@ -76,6 +88,9 @@ export class SaveContentController {
     @Param('id') id: number,
     @Request() req,
   ): Promise<{ message: string }> {
-    return await this.saveContentService.removeSavedContentById(id, req.user.userId);
+    return await this.saveContentService.removeSavedContentById(
+      id,
+      req.user.userId,
+    );
   }
 }

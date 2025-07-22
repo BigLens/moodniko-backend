@@ -89,9 +89,10 @@ describe('SaveContentService', () => {
       expect(mockContentRepository.findOne).toHaveBeenCalledWith({
         where: { id: createSavedContentDto.contentId },
       });
-      expect(mockSavedContentRepository.create).toHaveBeenCalledWith(
-        { ...createSavedContentDto, userId: 1 },
-      );
+      expect(mockSavedContentRepository.create).toHaveBeenCalledWith({
+        ...createSavedContentDto,
+        userId: 1,
+      });
     });
 
     it('should throw BadRequestException when mood exceeds 50 characters', async () => {
@@ -107,9 +108,9 @@ describe('SaveContentService', () => {
     it('should throw NotFoundException when content does not exist', async () => {
       mockContentRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.saveContent(createSavedContentDto, 1)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.saveContent(createSavedContentDto, 1),
+      ).rejects.toThrow(NotFoundException);
     });
 
     it('should throw BadRequestException when content is already saved with same mood', async () => {
@@ -119,9 +120,9 @@ describe('SaveContentService', () => {
       mockContentRepository.findOne.mockResolvedValue(mockContent);
       mockSavedContentRepository.findOne.mockResolvedValue(mockExistingSave);
 
-      await expect(service.saveContent(createSavedContentDto, 1)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        service.saveContent(createSavedContentDto, 1),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 

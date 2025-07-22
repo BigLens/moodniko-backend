@@ -66,7 +66,10 @@ describe('SaveContentController', () => {
       const result = await controller.saveContent(createSavedContentDto, req);
 
       expect(result).toEqual(mockSavedContent);
-      expect(service.saveContent).toHaveBeenCalledWith(createSavedContentDto, 1);
+      expect(service.saveContent).toHaveBeenCalledWith(
+        createSavedContentDto,
+        1,
+      );
     });
   });
 
