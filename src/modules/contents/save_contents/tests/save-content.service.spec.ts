@@ -16,6 +16,7 @@ describe('SaveContentService', () => {
 
   const mockQueryBuilder = {
     leftJoinAndSelect: jest.fn().mockReturnThis(),
+    where: jest.fn().mockReturnThis(),
     orderBy: jest.fn().mockReturnThis(),
     skip: jest.fn().mockReturnThis(),
     take: jest.fn().mockReturnThis(),
@@ -82,14 +83,14 @@ describe('SaveContentService', () => {
       mockSavedContentRepository.create.mockReturnValue(mockSavedContent);
       mockSavedContentRepository.save.mockResolvedValue(mockSavedContent);
 
-      const result = await service.saveContent(createSavedContentDto);
+      const result = await service.saveContent(createSavedContentDto, 1);
 
       expect(result).toEqual(mockSavedContent);
       expect(mockContentRepository.findOne).toHaveBeenCalledWith({
         where: { id: createSavedContentDto.contentId },
       });
       expect(mockSavedContentRepository.create).toHaveBeenCalledWith(
-        createSavedContentDto,
+        { ...createSavedContentDto, userId: 1 },
       );
     });
 
@@ -98,7 +99,7 @@ describe('SaveContentService', () => {
         ...createSavedContentDto,
         mood: 'a'.repeat(51) as Mood,
       };
-      await expect(service.saveContent(longMoodDto)).rejects.toThrow(
+      await expect(service.saveContent(longMoodDto, 1)).rejects.toThrow(
         BadRequestException,
       );
     });
@@ -106,7 +107,7 @@ describe('SaveContentService', () => {
     it('should throw NotFoundException when content does not exist', async () => {
       mockContentRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.saveContent(createSavedContentDto)).rejects.toThrow(
+      await expect(service.saveContent(createSavedContentDto, 1)).rejects.toThrow(
         NotFoundException,
       );
     });
@@ -118,7 +119,7 @@ describe('SaveContentService', () => {
       mockContentRepository.findOne.mockResolvedValue(mockContent);
       mockSavedContentRepository.findOne.mockResolvedValue(mockExistingSave);
 
-      await expect(service.saveContent(createSavedContentDto)).rejects.toThrow(
+      await expect(service.saveContent(createSavedContentDto, 1)).rejects.toThrow(
         BadRequestException,
       );
     });
@@ -137,7 +138,7 @@ describe('SaveContentService', () => {
 
       mockQueryBuilder.getMany.mockResolvedValue(mockResult);
 
-      const result = await service.getSavedContents(query);
+      const result = await service.getSavedContents(query, 1);
 
       expect(result).toEqual(mockResult);
       expect(savedContentRepository.createQueryBuilder).toHaveBeenCalledWith(
@@ -161,7 +162,7 @@ describe('SaveContentService', () => {
       const defaultLimit = 10;
       const skip = (defaultPage - 1) * defaultLimit;
 
-      await service.getSavedContents(query);
+      await service.getSavedContents(query, 1);
 
       expect(mockQueryBuilder.skip).toHaveBeenCalledWith(skip);
       expect(mockQueryBuilder.take).toHaveBeenCalledWith(defaultLimit);
@@ -174,20 +175,21 @@ describe('SaveContentService', () => {
     it('should remove saved content successfully', async () => {
       mockSavedContentRepository.count.mockResolvedValue(1);
 
-      await service.removeSavedContent(contentId);
+      await service.removeSavedContent(contentId, 1);
 
       expect(mockSavedContentRepository.count).toHaveBeenCalledWith({
-        where: { contentId },
+        where: { contentId, userId: 1 },
       });
       expect(mockSavedContentRepository.delete).toHaveBeenCalledWith({
         contentId,
+        userId: 1,
       });
     });
 
     it('should throw NotFoundException when saved content does not exist', async () => {
       mockSavedContentRepository.count.mockResolvedValue(0);
 
-      await expect(service.removeSavedContent(contentId)).rejects.toThrow(
+      await expect(service.removeSavedContent(contentId, 1)).rejects.toThrow(
         NotFoundException,
       );
     });
