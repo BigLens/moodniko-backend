@@ -21,6 +21,7 @@ export class SaveContentService {
 
   async saveContent(
     createSavedContentDto: CreateSavedContentDto,
+    userId: number,
   ): Promise<SavedContent> {
     const { contentId, mood } = createSavedContentDto;
     // Validate mood length - this is now handled by the enum, but we can keep it as a safeguard
@@ -36,9 +37,9 @@ export class SaveContentService {
       throw new NotFoundException('Content not found');
     }
 
-    // Check if already saved with same mood
+    // Check if already saved with same mood for this user
     const existingSave = await this.savedContentRepository.findOne({
-      where: { contentId, mood },
+      where: { contentId, mood, userId },
     });
 
     if (existingSave) {
@@ -49,6 +50,7 @@ export class SaveContentService {
     const savedContent = this.savedContentRepository.create({
       contentId,
       mood,
+      userId,
     });
 
     return await this.savedContentRepository.save(savedContent);
@@ -56,6 +58,7 @@ export class SaveContentService {
 
   async getSavedContents(
     query: GetSavedContentsQueryDto,
+    userId: number,
   ): Promise<SavedContent[]> {
     const { mood, contentType, page = 1, limit = 10 } = query;
     const skip = (page - 1) * limit;
@@ -65,6 +68,7 @@ export class SaveContentService {
 
     queryBuilder
       .leftJoinAndSelect('savedContent.content', 'content')
+      .where('savedContent.userId = :userId', { userId })
       .orderBy('savedContent.createdAt', 'DESC')
       .skip(skip)
       .take(limit);
@@ -80,9 +84,9 @@ export class SaveContentService {
     return await queryBuilder.getMany();
   }
 
-  async getSavedContentById(id: number): Promise<SavedContent> {
+  async getSavedContentById(id: number, userId: number): Promise<SavedContent> {
     const savedContent = await this.savedContentRepository.findOne({
-      where: { id },
+      where: { id, userId },
       relations: ['content'],
     });
     if (!savedContent) {
@@ -91,9 +95,9 @@ export class SaveContentService {
     return savedContent;
   }
 
-  async removeSavedContent(contentId: number): Promise<{ message: string }> {
+  async removeSavedContent(contentId: number, userId: number): Promise<{ message: string }> {
     const exists = await this.savedContentRepository.count({
-      where: { contentId },
+      where: { contentId, userId },
     });
 
     if (exists === 0) {
@@ -102,18 +106,18 @@ export class SaveContentService {
       );
     }
 
-    await this.savedContentRepository.delete({ contentId });
+    await this.savedContentRepository.delete({ contentId, userId });
     return { message: 'Resource deleted' };
   }
 
-  async removeSavedContentById(id: number): Promise<{ message: string }> {
-    const exists = await this.savedContentRepository.count({ where: { id } });
+  async removeSavedContentById(id: number, userId: number): Promise<{ message: string }> {
+    const exists = await this.savedContentRepository.count({ where: { id, userId } });
     if (exists === 0) {
       throw new NotFoundException(
         'Fail deletion because the resource does not exist',
       );
     }
-    await this.savedContentRepository.delete({ id });
+    await this.savedContentRepository.delete({ id, userId });
     return { message: 'Resource deleted' };
   }
 }
