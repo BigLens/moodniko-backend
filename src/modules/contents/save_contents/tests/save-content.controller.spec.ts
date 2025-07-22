@@ -48,15 +48,28 @@ describe('SaveContentController', () => {
       mood: 'happy',
       createdAt: new Date(),
       content: null,
+      userId: 1,
+      user: {
+        id: 1,
+        email: 'test@example.com',
+        password: 'hashed',
+        moods: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     };
 
     it('should call the saveContent service method', async () => {
       mockSaveContentService.saveContent.mockResolvedValue(mockSavedContent);
 
-      const result = await controller.saveContent(createSavedContentDto);
+      const req = { user: { userId: 1 } };
+      const result = await controller.saveContent(createSavedContentDto, req);
 
       expect(result).toEqual(mockSavedContent);
-      expect(service.saveContent).toHaveBeenCalledWith(createSavedContentDto);
+      expect(service.saveContent).toHaveBeenCalledWith(
+        createSavedContentDto,
+        1,
+      );
     });
   });
 
@@ -66,10 +79,11 @@ describe('SaveContentController', () => {
       const mockResult: SavedContent[] = [];
       mockSaveContentService.getSavedContents.mockResolvedValue(mockResult);
 
-      const result = await controller.getSavedContents(query);
+      const req = { user: { userId: 1 } };
+      const result = await controller.getSavedContents(query, req);
 
       expect(result).toEqual(mockResult);
-      expect(service.getSavedContents).toHaveBeenCalledWith(query);
+      expect(service.getSavedContents).toHaveBeenCalledWith(query, 1);
     });
   });
 
@@ -80,9 +94,10 @@ describe('SaveContentController', () => {
         message: 'Resource deleted',
       });
 
-      await controller.removeSavedContent(contentId);
+      const req = { user: { userId: 1 } };
+      await controller.removeSavedContent(contentId, req);
 
-      expect(service.removeSavedContent).toHaveBeenCalledWith(contentId);
+      expect(service.removeSavedContent).toHaveBeenCalledWith(contentId, 1);
     });
   });
 });
