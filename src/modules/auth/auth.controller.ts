@@ -3,8 +3,8 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { LoginDoc } from './docs/login.doc';
+import { RegisterDoc } from './docs/register.doc';
 import { CreateUserDto } from '@modules/user/dto/create-user.dto';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
@@ -19,23 +19,7 @@ export class AuthController {
 
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
-  @ApiTags('auth')
-  @ApiOperation({ summary: 'Create user and return access token' })
-  @ApiBody({
-    schema: {
-      properties: {
-        email: { type: 'string', example: 'user@example.com' },
-        password: { type: 'string', example: 'yourPassword123' },
-      },
-      required: ['email', 'password'],
-    },
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'User created and token returned',
-    type: LoginResponseDto,
-  })
-  @ApiResponse({ status: 409, description: 'Email already in use' })
+  @RegisterDoc()
   async create(
     @Body() createUserDto: CreateUserDto,
   ): Promise<LoginResponseDto> {

@@ -80,6 +80,18 @@ export const SaveContentDocs = () =>
       },
     }),
     ApiResponse({
+      status: 401,
+      description: 'Unauthorized - Invalid or missing JWT token',
+      schema: {
+        type: 'object',
+        properties: {
+          statusCode: { type: 'number', example: 401 },
+          message: { type: 'string', example: 'Unauthorized' },
+          error: { type: 'string', example: 'Unauthorized' },
+        },
+      },
+    }),
+    ApiResponse({
       status: 404,
       description: 'Content not found',
       schema: {
@@ -141,6 +153,18 @@ export const GetSavedContentsDocs = () =>
       description: 'Bad Request - Invalid query parameters.',
     }),
     ApiResponse({
+      status: 401,
+      description: 'Unauthorized - Invalid or missing JWT token',
+      schema: {
+        type: 'object',
+        properties: {
+          statusCode: { type: 'number', example: 401 },
+          message: { type: 'string', example: 'Unauthorized' },
+          error: { type: 'string', example: 'Unauthorized' },
+        },
+      },
+    }),
+    ApiResponse({
       status: 500,
       description: 'Internal server error',
     }),
@@ -162,6 +186,18 @@ export const GetSavedContentByIdDocs = () =>
       status: 200,
       description: 'Saved content found',
       schema: { type: 'object', example: exampleSavedContentWithDetails },
+    }),
+    ApiResponse({
+      status: 401,
+      description: 'Unauthorized - Invalid or missing JWT token',
+      schema: {
+        type: 'object',
+        properties: {
+          statusCode: { type: 'number', example: 401 },
+          message: { type: 'string', example: 'Unauthorized' },
+          error: { type: 'string', example: 'Unauthorized' },
+        },
+      },
     }),
     ApiResponse({
       status: 404,
@@ -196,6 +232,18 @@ export const RemoveSavedContentDocs = () =>
       schema: {
         type: 'object',
         example: { message: 'Resource deleted' },
+      },
+    }),
+    ApiResponse({
+      status: 401,
+      description: 'Unauthorized - Invalid or missing JWT token',
+      schema: {
+        type: 'object',
+        properties: {
+          statusCode: { type: 'number', example: 401 },
+          message: { type: 'string', example: 'Unauthorized' },
+          error: { type: 'string', example: 'Unauthorized' },
+        },
       },
     }),
     ApiResponse({
@@ -234,6 +282,18 @@ export const RemoveSavedContentByIdDocs = () =>
       schema: {
         type: 'object',
         example: { message: 'Resource deleted' },
+      },
+    }),
+    ApiResponse({
+      status: 401,
+      description: 'Unauthorized - Invalid or missing JWT token',
+      schema: {
+        type: 'object',
+        properties: {
+          statusCode: { type: 'number', example: 401 },
+          message: { type: 'string', example: 'Unauthorized' },
+          error: { type: 'string', example: 'Unauthorized' },
+        },
       },
     }),
     ApiResponse({
