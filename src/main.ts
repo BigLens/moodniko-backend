@@ -5,26 +5,28 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { Request, Response, NextFunction } from 'express';
+import { AppConfigService } from './config/config.service';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
 
   try {
-    logger.log('Validating environment configuration...');
-    const requiredEnvVars = ['DATABASE_URL'];
-    const missingVars = requiredEnvVars.filter(
-      (varName) => !process.env[varName],
-    );
-
-    if (missingVars.length > 0) {
-      logger.warn(`Missing environment variables: ${missingVars.join(', ')}`);
-    } else {
-      logger.log('Environment configuration validated successfully');
-    }
-
     const app = await NestFactory.create(AppModule, {
       logger: ['error', 'warn', 'log', 'debug', 'verbose'],
     });
+
+    // Get configuration service
+    const configService = app.get(AppConfigService);
+
+    // Validate environment configuration
+    logger.log('Validating environment configuration...');
+    try {
+      configService.validateEnvironment();
+      logger.log('Environment configuration validated successfully');
+    } catch (error) {
+      logger.error('Environment validation failed:', error.message);
+      process.exit(1);
+    }
 
     app.use((req: Request, res: Response, next: NextFunction) => {
       const startTime = Date.now();
@@ -81,17 +83,19 @@ async function bootstrap() {
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api/docs', app, document);
 
-    const env = process.env.NODE_ENV || 'development';
-    const port = process.env.PORT || 4002;
+    const port = configService.port;
+    const nodeEnv = configService.nodeEnv;
 
     await app.listen(port);
 
-    logger.log(`Server is running on http://localhost:${port} in ${env} mode`);
+    logger.log(
+      `Server is running on http://localhost:${port} in ${nodeEnv} mode`,
+    );
     logger.log(
       `API Documentation available at http://localhost:${port}/api/docs`,
     );
     logger.log(`Health checks available at http://localhost:${port}/health`);
-    logger.log(`Environment: ${env}`);
+    logger.log(`Environment: ${nodeEnv}`);
     logger.log(`Started at: ${new Date().toISOString()}`);
 
     const gracefulShutdown = async (signal: string) => {
