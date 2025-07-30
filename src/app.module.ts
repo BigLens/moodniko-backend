@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import dataSource from './database/data-source';
 import { MoodModule } from '@modules/mood/mood.module';
 import { ContentsModule } from '@modules/contents/contents.module';
 import { MoviesModule } from '@modules/contents/providers/movies/movies.module';
@@ -10,22 +8,20 @@ import { AuthModule } from '@modules/auth/auth.module';
 import { UserModule } from '@modules/user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AppConfigModule } from './config/config.module';
+import { AppConfigService } from './config/config.service';
+import { createDataSource } from './database/data-source';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    AppConfigModule,
     TypeOrmModule.forRootAsync({
-      useFactory: async () => ({
-        ...dataSource.options,
-      }),
-      dataSourceFactory: async () => {
-        if (!dataSource.isInitialized) {
-          await dataSource.initialize();
-        }
-        return dataSource;
+      imports: [AppConfigModule],
+      useFactory: async (configService: AppConfigService) => {
+        const dataSource = createDataSource(configService);
+        return dataSource.options;
       },
+      inject: [AppConfigService],
     }),
     MoodModule,
     ContentsModule,
