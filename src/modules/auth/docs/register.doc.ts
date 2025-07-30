@@ -2,13 +2,12 @@ import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiBody, ApiTags } from '@nestjs/swagger';
 import { LoginResponseDto } from '../dto/login-response.dto';
 
-export function LoginDoc() {
+export function RegisterDoc() {
   return applyDecorators(
     ApiTags('auth'),
     ApiOperation({
-      summary: 'User login',
-      description:
-        'Authenticate user with email and password, return JWT access token',
+      summary: 'Register new user',
+      description: 'Create a new user account and return JWT access token',
     }),
     ApiBody({
       schema: {
@@ -22,20 +21,19 @@ export function LoginDoc() {
           password: {
             type: 'string',
             example: 'yourPassword123',
-            description: 'User password',
+            description: 'User password (minimum 6 characters)',
           },
         },
         required: ['email', 'password'],
       },
     }),
     ApiResponse({
-      status: 200,
-      description: 'Login successful',
+      status: 201,
+      description: 'User created successfully',
       type: LoginResponseDto,
       schema: {
         example: {
-          accessToken:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+          accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
           user: {
             id: 1,
             email: 'user@example.com',
@@ -44,13 +42,13 @@ export function LoginDoc() {
       },
     }),
     ApiResponse({
-      status: 401,
-      description: 'Invalid credentials',
+      status: 409,
+      description: 'Email already in use',
       schema: {
         example: {
-          statusCode: 401,
-          message: 'Invalid credentials',
-          error: 'Unauthorized',
+          statusCode: 409,
+          message: 'Email already in use',
+          error: 'Conflict',
         },
       },
     }),
