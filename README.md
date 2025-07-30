@@ -209,51 +209,6 @@ These endpoints don't require authentication:
 
 ---
 
-## **Testing Authentication**
-
-### Running Authentication Tests
-
-```bash
-# Run all authentication-related tests
-npm test -- --testPathPattern="auth"
-
-# Run specific authentication test files
-npm test src/modules/auth/auth.service.spec.ts
-npm test src/modules/auth/strategies/jwt.strategy.spec.ts
-npm test src/modules/auth/guards/jwt-auth.guard.spec.ts
-
-# Run E2E authentication tests
-npm run test:e2e -- --testPathPattern="auth"
-```
-
-### Test Utilities
-
-The project includes comprehensive test utilities for authentication:
-
-```typescript
-import { TestAuthUtils } from './test/test-utils';
-
-// Generate valid JWT token
-const token = TestAuthUtils.generateValidToken();
-
-// Create mock user
-const user = TestAuthUtils.createMockUser();
-
-// Create authentication headers
-const headers = TestAuthUtils.createAuthHeaders(token);
-```
-
-### Authentication Test Coverage
-
-- ✅ Unit tests for authentication service
-- ✅ Unit tests for JWT strategy
-- ✅ Unit tests for JWT guard
-- ✅ Unit tests for user service
-- ✅ E2E tests for authentication endpoints
-- ✅ E2E tests for protected routes
-- ✅ Tests for authentication failures and edge cases
-
----
 
 ## **Environment Variables Documentation**
 
