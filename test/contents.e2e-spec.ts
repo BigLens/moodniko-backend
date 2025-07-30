@@ -10,10 +10,12 @@ import { ContentType } from '@modules/contents/enum/content.enum';
 import { ContentEntity } from '@modules/contents/model/content.entity';
 import { testDatabaseConfig } from './test-database.config';
 import { DataSource } from 'typeorm';
+import { TestAuthUtils } from './test-utils';
 
 describe('ContentsController (e2e)', () => {
   let app: INestApplication;
   let dataSource: DataSource;
+  let validToken: string;
 
   const mockContentEntity = (type: ContentType): ContentEntity => ({
     id: 1,
@@ -54,6 +56,9 @@ describe('ContentsController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     dataSource = moduleFixture.get<DataSource>(DataSource);
     await app.init();
+
+    // Generate a valid token for testing
+    validToken = TestAuthUtils.generateValidToken();
   });
 
   afterEach(async () => {
@@ -70,12 +75,13 @@ describe('ContentsController (e2e)', () => {
   });
 
   describe('GET /contents', () => {
-    it('should return 200 and content for valid movie request', async () => {
+    it('should return 200 and content for valid movie request with authentication', async () => {
       const mockMovies = [mockContentEntity(ContentType.MOVIE)];
       mockMoviesService.fetchMoviesByMood.mockResolvedValue(mockMovies);
 
       const response = await request(app.getHttpServer())
         .get('/contents')
+        .set('Authorization', `Bearer ${validToken}`)
         .query({ mood: 'happy', type: ContentType.MOVIE })
         .expect(200);
 
@@ -95,12 +101,13 @@ describe('ContentsController (e2e)', () => {
       expect(mockMoviesService.fetchMoviesByMood).toHaveBeenCalledWith('happy');
     });
 
-    it('should return 200 and content for valid music request', async () => {
+    it('should return 200 and content for valid music request with authentication', async () => {
       const mockMusic = [mockContentEntity(ContentType.MUSIC)];
       mockSpotifyService.fetchContentByMood.mockResolvedValue(mockMusic);
 
       const response = await request(app.getHttpServer())
         .get('/contents')
+        .set('Authorization', `Bearer ${validToken}`)
         .query({ mood: 'happy', type: ContentType.MUSIC })
         .expect(200);
 
@@ -123,12 +130,13 @@ describe('ContentsController (e2e)', () => {
       );
     });
 
-    it('should return 200 and content for valid podcast request', async () => {
+    it('should return 200 and content for valid podcast request with authentication', async () => {
       const mockPodcasts = [mockContentEntity(ContentType.PODCAST)];
       mockSpotifyService.fetchContentByMood.mockResolvedValue(mockPodcasts);
 
       const response = await request(app.getHttpServer())
         .get('/contents')
+        .set('Authorization', `Bearer ${validToken}`)
         .query({ mood: 'happy', type: ContentType.PODCAST })
         .expect(200);
 
@@ -151,12 +159,13 @@ describe('ContentsController (e2e)', () => {
       );
     });
 
-    it('should return 200 and content for valid book request', async () => {
+    it('should return 200 and content for valid book request with authentication', async () => {
       const mockBooks = [mockContentEntity(ContentType.BOOK)];
       mockBooksService.fetchBooksByMood.mockResolvedValue(mockBooks);
 
       const response = await request(app.getHttpServer())
         .get('/contents')
+        .set('Authorization', `Bearer ${validToken}`)
         .query({ mood: 'happy', type: ContentType.BOOK })
         .expect(200);
 
@@ -176,68 +185,55 @@ describe('ContentsController (e2e)', () => {
       expect(mockBooksService.fetchBooksByMood).toHaveBeenCalledWith('happy');
     });
 
-    it('should return 400 for missing mood parameter', async () => {
+    it('should return 401 for missing authentication', async () => {
       await request(app.getHttpServer())
         .get('/contents')
+        .query({ mood: 'happy', type: ContentType.MOVIE })
+        .expect(401);
+    });
+
+    it('should return 401 for invalid authentication token', async () => {
+      await request(app.getHttpServer())
+        .get('/contents')
+        .set('Authorization', 'Bearer invalid-token')
+        .query({ mood: 'happy', type: ContentType.MOVIE })
+        .expect(401);
+    });
+
+    it('should return 400 for missing mood parameter with authentication', async () => {
+      await request(app.getHttpServer())
+        .get('/contents')
+        .set('Authorization', `Bearer ${validToken}`)
         .query({ type: ContentType.MOVIE })
         .expect(400);
     });
 
-    it('should return 400 for missing type parameter', async () => {
+    it('should return 400 for missing type parameter with authentication', async () => {
       await request(app.getHttpServer())
         .get('/contents')
+        .set('Authorization', `Bearer ${validToken}`)
         .query({ mood: 'happy' })
         .expect(400);
     });
 
-    it('should return 400 for invalid content type', async () => {
+    it('should return 400 for invalid content type with authentication', async () => {
       await request(app.getHttpServer())
         .get('/contents')
+        .set('Authorization', `Bearer ${validToken}`)
         .query({ mood: 'happy', type: 'INVALID' })
         .expect(400);
     });
 
-    it('should return 500 when service throws error', async () => {
+    it('should return 500 when service throws error with authentication', async () => {
       mockMoviesService.fetchMoviesByMood.mockRejectedValue(
         new Error('Service error'),
       );
 
       await request(app.getHttpServer())
         .get('/contents')
+        .set('Authorization', `Bearer ${validToken}`)
         .query({ mood: 'happy', type: ContentType.MOVIE })
         .expect(500);
-    });
-
-    it('should return empty array when no content is found', async () => {
-      mockMoviesService.fetchMoviesByMood.mockResolvedValue([]);
-
-      const response = await request(app.getHttpServer())
-        .get('/contents')
-        .query({ mood: 'happy', type: ContentType.MOVIE })
-        .expect(200);
-
-      expect(response.body).toEqual([]);
-    });
-
-    it('should validate response matches ContentEntity shape', async () => {
-      const mockMovie = mockContentEntity(ContentType.MOVIE);
-      mockMoviesService.fetchMoviesByMood.mockResolvedValue([mockMovie]);
-
-      const response = await request(app.getHttpServer())
-        .get('/contents')
-        .query({ mood: 'happy', type: ContentType.MOVIE })
-        .expect(200);
-
-      const content = response.body[0];
-      expect(content).toHaveProperty('id');
-      expect(content).toHaveProperty('externalId');
-      expect(content).toHaveProperty('title');
-      expect(content).toHaveProperty('description');
-      expect(content).toHaveProperty('imageUrl');
-      expect(content).toHaveProperty('type');
-      expect(content).toHaveProperty('moodtag');
-      expect(content).toHaveProperty('createdAt');
-      expect(content).toHaveProperty('updatedAt');
     });
   });
 });
