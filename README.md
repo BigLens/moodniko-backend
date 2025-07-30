@@ -307,8 +307,3 @@ For questions or issues related to authentication:
 3. Check the environment variables configuration
 4. Ensure all required dependencies are installed
 
----
-
-## **License**
-
-This project is licensed under the UNLICENSED license.
