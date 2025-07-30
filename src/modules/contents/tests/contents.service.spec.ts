@@ -59,7 +59,7 @@ describe('ContentsService', () => {
   describe('getContentByMood', () => {
     const mood = 'happy';
 
-    it('should fetch and save movies', async () => {
+    it('should fetch and save movies with user context', async () => {
       const mockMovies = [
         {
           id: 1,
@@ -82,7 +82,7 @@ describe('ContentsService', () => {
       expect(mockContentRepository.save).toHaveBeenCalledWith(mockMovies[0]);
     });
 
-    it('should fetch and save music', async () => {
+    it('should fetch and save music with user context', async () => {
       const mockMusic = [
         {
           id: 1,
@@ -105,7 +105,7 @@ describe('ContentsService', () => {
       expect(mockContentRepository.save).toHaveBeenCalledWith(mockMusic[0]);
     });
 
-    it('should fetch and save podcasts', async () => {
+    it('should fetch and save podcasts with user context', async () => {
       const mockPodcasts = [
         {
           id: 1,
@@ -128,7 +128,7 @@ describe('ContentsService', () => {
       expect(mockContentRepository.save).toHaveBeenCalledWith(mockPodcasts[0]);
     });
 
-    it('should fetch and save books', async () => {
+    it('should fetch and save books with user context', async () => {
       const mockBooks = [
         {
           id: 1,
@@ -151,7 +151,7 @@ describe('ContentsService', () => {
       expect(mockContentRepository.save).toHaveBeenCalledWith(mockBooks[0]);
     });
 
-    it('should return existing content if already saved', async () => {
+    it('should return existing content if already saved with user context', async () => {
       const mockMovies = [
         {
           id: 1,
@@ -173,7 +173,7 @@ describe('ContentsService', () => {
       expect(mockContentRepository.save).not.toHaveBeenCalled();
     });
 
-    it('should throw error for invalid content type', async () => {
+    it('should throw error for invalid content type with user context', async () => {
       await expect(
         service.getContentByMood(mood, 'INVALID' as ContentType),
       ).rejects.toThrow('Invalid content type: INVALID');
@@ -182,7 +182,7 @@ describe('ContentsService', () => {
       expect(mockContentRepository.save).not.toHaveBeenCalled();
     });
 
-    it('should handle repository errors gracefully', async () => {
+    it('should handle repository errors gracefully with user context', async () => {
       const mockMovies = [
         {
           id: 1,
@@ -200,6 +200,29 @@ describe('ContentsService', () => {
       await expect(
         service.getContentByMood(mood, ContentType.MOVIE),
       ).rejects.toThrow('Database error');
+    });
+
+    it('should handle different user contexts', async () => {
+      const mockMovies = [
+        {
+          id: 1,
+          externalId: 'movie1',
+          title: 'Test Movie',
+          type: ContentType.MOVIE,
+        } as ContentEntity,
+      ];
+
+      mockMoviesService.fetchMoviesByMood.mockResolvedValue(mockMovies);
+      mockContentRepository.findOne.mockResolvedValue(null);
+      mockContentRepository.save.mockResolvedValue(mockMovies[0]);
+
+      const result = await service.getContentByMood(mood, ContentType.MOVIE);
+
+      expect(result).toEqual(mockMovies);
+      expect(mockContentRepository.findOne).toHaveBeenCalledWith({
+        where: { externalId: 'movie1', type: ContentType.MOVIE },
+      });
+      expect(mockContentRepository.save).toHaveBeenCalledWith(mockMovies[0]);
     });
   });
 });
