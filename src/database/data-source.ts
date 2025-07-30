@@ -6,9 +6,38 @@ import { ContentEntity } from '@modules/contents/model/content.entity';
 import { SavedContent } from '@modules/contents/save_contents/save-content.entity';
 import { UserEntity } from '@modules/user/entity/user.entity';
 import { MoodEntity } from '@modules/mood/entity/mood.entity';
+import { UserPreferencesEntity } from '@modules/user-preferences/entity/user-preferences.entity';
+import { AppConfigService } from '../config/config.service';
 
 config({ path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env' });
 
+// Create a function to get data source configuration
+export function createDataSource(configService: AppConfigService): DataSource {
+  return new DataSource({
+    type: configService.databaseType as any,
+    host: configService.databaseHost,
+    port: configService.databasePort,
+    username: configService.databaseUsername,
+    password: configService.databasePassword,
+    database: configService.databaseName,
+    synchronize: configService.databaseSynchronize,
+    entities: [
+      ContentEntity,
+      SavedContent,
+      UserEntity,
+      MoodEntity,
+      UserPreferencesEntity,
+      ...(globSync(configService.databaseEntities) as any[]),
+    ],
+    namingStrategy: new SnakeNamingStrategy(),
+    migrations: globSync(configService.databaseMigrations),
+    migrationsTableName: configService.databaseMigrationsTableName,
+    ssl: configService.databaseSSL,
+  });
+}
+
+// For backward compatibility, create a default data source
+// This will be used when the config service is not available (e.g., during migrations)
 const dataSource = new DataSource({
   type: (process.env.DB_TYPE as any) || 'postgres',
   host: process.env.DB_HOST,
@@ -22,6 +51,7 @@ const dataSource = new DataSource({
     SavedContent,
     UserEntity,
     MoodEntity,
+    UserPreferencesEntity,
     ...(globSync(
       process.env.DB_ENTITIES || 'src/**/*.entity.{ts,js}',
     ) as any[]),
@@ -40,4 +70,5 @@ export async function dataSourceInit() {
   }
   return dataSource;
 }
+
 export default dataSource;
