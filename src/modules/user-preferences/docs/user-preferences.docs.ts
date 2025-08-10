@@ -61,8 +61,9 @@ export function GetUserPreferencesDocs() {
 export function UpdateUserPreferencesDocs() {
   return applyDecorators(
     ApiOperation({
-      summary: 'Update user preferences',
-      description: 'Update user preferences for the authenticated user',
+      summary: 'Update (upsert) user preferences',
+      description:
+        'Upsert user preferences for the authenticated user. If preferences do not exist yet, this will create them; otherwise it will update the existing record.',
     }),
     ApiBearerAuth('JWT-auth'),
     ApiBody({

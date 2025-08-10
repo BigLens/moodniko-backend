@@ -26,21 +26,21 @@ describe('UserPreferences (e2e)', () => {
     }
   });
 
-  describe('GET /user-preferences', () => {
+  describe('GET /user/preferences', () => {
     it('should return 401 for missing authentication', async () => {
-      await request(app.getHttpServer()).get('/user-preferences').expect(401);
+      await request(app.getHttpServer()).get('/user/preferences').expect(401);
     });
 
     it('should return 401 for invalid authentication token', async () => {
       await request(app.getHttpServer())
-        .get('/user-preferences')
+        .get('/user/preferences')
         .set('Authorization', 'Bearer invalid-token')
         .expect(401);
     });
 
     it('should return 200 and user preferences with valid authentication', async () => {
       const response = await request(app.getHttpServer())
-        .get('/user-preferences')
+        .get('/user/preferences')
         .set('Authorization', `Bearer ${validToken}`)
         .expect(200);
 
@@ -57,7 +57,7 @@ describe('UserPreferences (e2e)', () => {
     it('should return null when user has no preferences', async () => {
       // This test assumes the user has no preferences set up
       const response = await request(app.getHttpServer())
-        .get('/user-preferences')
+        .get('/user/preferences')
         .set('Authorization', `Bearer ${validToken}`)
         .expect(200);
 
@@ -66,7 +66,7 @@ describe('UserPreferences (e2e)', () => {
     });
   });
 
-  describe('PUT /user-preferences', () => {
+  describe('PUT /user/preferences', () => {
     const updateData = {
       theme: 'light',
       notificationsEnabled: false,
@@ -75,14 +75,14 @@ describe('UserPreferences (e2e)', () => {
 
     it('should return 401 for missing authentication', async () => {
       await request(app.getHttpServer())
-        .put('/user-preferences')
+        .put('/user/preferences')
         .send(updateData)
         .expect(401);
     });
 
     it('should return 401 for invalid authentication token', async () => {
       await request(app.getHttpServer())
-        .put('/user-preferences')
+        .put('/user/preferences')
         .set('Authorization', 'Bearer invalid-token')
         .send(updateData)
         .expect(401);
@@ -90,7 +90,7 @@ describe('UserPreferences (e2e)', () => {
 
     it('should return 200 and update user preferences with valid authentication', async () => {
       const response = await request(app.getHttpServer())
-        .put('/user-preferences')
+        .put('/user/preferences')
         .set('Authorization', `Bearer ${validToken}`)
         .send(updateData)
         .expect(200);
@@ -112,7 +112,7 @@ describe('UserPreferences (e2e)', () => {
       const partialUpdate = { theme: 'dark' };
 
       const response = await request(app.getHttpServer())
-        .put('/user-preferences')
+        .put('/user/preferences')
         .set('Authorization', `Bearer ${validToken}`)
         .send(partialUpdate)
         .expect(200);
@@ -123,7 +123,7 @@ describe('UserPreferences (e2e)', () => {
 
     it('should handle empty update data', async () => {
       const response = await request(app.getHttpServer())
-        .put('/user-preferences')
+        .put('/user/preferences')
         .set('Authorization', `Bearer ${validToken}`)
         .send({})
         .expect(200);
@@ -138,7 +138,7 @@ describe('UserPreferences (e2e)', () => {
       };
 
       await request(app.getHttpServer())
-        .put('/user-preferences')
+        .put('/user/preferences')
         .set('Authorization', `Bearer ${validToken}`)
         .send(invalidData)
         .expect(400);
@@ -150,28 +150,28 @@ describe('UserPreferences (e2e)', () => {
       const expiredToken = TestAuthUtils.generateExpiredToken();
 
       await request(app.getHttpServer())
-        .get('/user-preferences')
+        .get('/user/preferences')
         .set('Authorization', `Bearer ${expiredToken}`)
         .expect(401);
     });
 
     it('should handle malformed tokens', async () => {
       await request(app.getHttpServer())
-        .get('/user-preferences')
+        .get('/user/preferences')
         .set('Authorization', 'Bearer malformed.token.here')
         .expect(401);
     });
 
     it('should handle missing Bearer prefix', async () => {
       await request(app.getHttpServer())
-        .get('/user-preferences')
+        .get('/user/preferences')
         .set('Authorization', validToken)
         .expect(401);
     });
 
     it('should handle empty Authorization header', async () => {
       await request(app.getHttpServer())
-        .get('/user-preferences')
+        .get('/user/preferences')
         .set('Authorization', '')
         .expect(401);
     });
@@ -183,7 +183,7 @@ describe('UserPreferences (e2e)', () => {
       );
 
       const response = await request(app.getHttpServer())
-        .get('/user-preferences')
+        .get('/user/preferences')
         .set('Authorization', `Bearer ${differentUserToken}`)
         .expect(200);
 
@@ -201,7 +201,7 @@ describe('UserPreferences (e2e)', () => {
       const user1Data = { theme: 'light', notificationsEnabled: true };
 
       const user1Response = await request(app.getHttpServer())
-        .put('/user-preferences')
+        .put('/user/preferences')
         .set('Authorization', `Bearer ${user1Token}`)
         .send(user1Data)
         .expect(200);
@@ -214,7 +214,7 @@ describe('UserPreferences (e2e)', () => {
       const user2Data = { theme: 'dark', notificationsEnabled: false };
 
       const user2Response = await request(app.getHttpServer())
-        .put('/user-preferences')
+        .put('/user/preferences')
         .set('Authorization', `Bearer ${user2Token}`)
         .send(user2Data)
         .expect(200);

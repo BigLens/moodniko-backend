@@ -8,6 +8,30 @@ import {
 import { BaseEntity } from '@entities/base-entity';
 import { UserEntity } from '@modules/user/entity/user.entity';
 
+// Mood preference interface for type safety
+export interface MoodPreference {
+  intensityLevels: number[];
+  preferredContentTypes: string[];
+  customCategories: string[];
+  defaultPreferences: {
+    contentTypes: string[];
+    intensityThreshold: number;
+  };
+}
+
+// Mood intensity settings interface
+export interface MoodIntensitySettings {
+  minIntensity: number;
+  maxIntensity: number;
+  contentMappings: {
+    [contentType: string]: {
+      minIntensity: number;
+      maxIntensity: number;
+      priority: number;
+    };
+  };
+}
+
 @Entity('user_preferences')
 export class UserPreferencesEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -17,6 +41,7 @@ export class UserPreferencesEntity extends BaseEntity {
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
+  // Basic preferences (existing)
   @Column({ default: 'light' })
   theme: string;
 
@@ -25,4 +50,27 @@ export class UserPreferencesEntity extends BaseEntity {
 
   @Column('simple-array', { nullable: true })
   preferredContentTypes: string[];
+
+  // Mood-specific preferences (new)
+  @Column('json', { nullable: true })
+  moodPreferences: {
+    [mood: string]: MoodPreference;
+  };
+
+  @Column('json', { nullable: true })
+  moodIntensitySettings: {
+    [mood: string]: MoodIntensitySettings;
+  };
+
+  @Column('simple-array', { nullable: true })
+  customMoodCategories: string[];
+
+  @Column({ default: 5 })
+  defaultIntensityLevels: number; // Default number of intensity levels (1-5, 1-10, etc.)
+
+  @Column({ default: true })
+  enableMoodIntensity: boolean; // Toggle for mood intensity feature
+
+  @Column({ default: true })
+  enableCustomMoodCategories: boolean; // Toggle for custom mood categories
 }
