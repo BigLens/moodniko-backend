@@ -6,6 +6,7 @@ import { MoviesModule } from '@modules/contents/providers/movies/movies.module';
 import { HealthModule } from './health/health.module';
 import { AuthModule } from '@modules/auth/auth.module';
 import { UserModule } from '@modules/user/user.module';
+import { UserPreferencesModule } from '@modules/user-preferences/user-preferences.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppConfigModule } from './config/config.module';
@@ -29,6 +30,7 @@ import { createDataSource } from './database/data-source';
     HealthModule,
     AuthModule,
     UserModule,
+    UserPreferencesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
