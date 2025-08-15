@@ -1,39 +1,30 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RecommendationService } from './recommendation.service';
-import { UserPreferencesService } from '../user-preferences/user-preferences.service';
-import { ContentsService } from '../contents/contents.service';
+import { MoodHistoryService } from '../mood/mood-history/mood-history.service';
 
 describe('RecommendationService', () => {
   let service: RecommendationService;
-  let userPreferencesService: UserPreferencesService;
-  let contentsService: ContentsService;
-
-  const mockUserPreferencesService = {
-    findByUserId: jest.fn(),
-  };
-
-  const mockContentsService = {
-    // Add mock methods when content service is implemented
-  };
+  let moodHistoryService: MoodHistoryService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         RecommendationService,
         {
-          provide: UserPreferencesService,
-          useValue: mockUserPreferencesService,
-        },
-        {
-          provide: ContentsService,
-          useValue: mockContentsService,
+          provide: MoodHistoryService,
+          useValue: {
+            analyzeMoodHistory: jest.fn().mockResolvedValue({
+              patterns: [],
+              trends: [],
+              recommendations: [],
+            }),
+          },
         },
       ],
     }).compile();
 
     service = module.get<RecommendationService>(RecommendationService);
-    userPreferencesService = module.get<UserPreferencesService>(UserPreferencesService);
-    contentsService = module.get<ContentsService>(ContentsService);
+    moodHistoryService = module.get<MoodHistoryService>(MoodHistoryService);
   });
 
   it('should be defined', () => {
@@ -41,7 +32,7 @@ describe('RecommendationService', () => {
   });
 
   describe('generateRecommendations', () => {
-    it('should return fallback recommendations when user preferences not found', async () => {
+    it('should return recommendations with mood history analysis', async () => {
       const request = {
         userId: 1,
         currentMood: 'happy',
@@ -49,47 +40,47 @@ describe('RecommendationService', () => {
         limit: 5,
       };
 
-      mockUserPreferencesService.findByUserId.mockResolvedValue(null);
+      const mockMoodAnalysis = {
+        totalEntries: 20,
+        dateRange: {
+          start: new Date('2024-01-01'),
+          end: new Date('2024-01-30'),
+        },
+        patterns: [
+          {
+            mood: 'happy',
+            frequency: 5,
+            averageIntensity: 6,
+            commonTriggers: ['good news'],
+            timeOfDay: 'Morning (6AM-12PM)',
+            dayOfWeek: 'Monday',
+            averageDuration: 90,
+          },
+        ],
+        trends: [
+          {
+            period: 'Period 1',
+            averageMood: 'happy',
+            moodStability: 0.7,
+            intensityTrend: 'stable' as const,
+            topMoods: [{ mood: 'happy', count: 5 }],
+          },
+        ],
+        recommendations: ['Keep up the positive mood'],
+      };
+
+      jest
+        .spyOn(moodHistoryService, 'analyzeMoodHistory')
+        .mockResolvedValue(mockMoodAnalysis);
 
       const result = await service.generateRecommendations(request);
 
       expect(result).toBeDefined();
       expect(result.length).toBeGreaterThan(0);
-      expect(result[0].confidence).toBe(0.5);
-      expect(result[0].reason).toBe('General recommendation based on mood');
-    });
-
-    it('should return personalized recommendations when user preferences exist', async () => {
-      const request = {
-        userId: 1,
-        currentMood: 'happy',
-        moodIntensity: 7,
-        limit: 5,
-      };
-
-      const mockPreferences = {
-        moodPreferences: {
-          happy: {
-            preferredContentTypes: ['music', 'movies'],
-          },
-        },
-        moodIntensitySettings: {
-          happy: {
-            contentMappings: {
-              music: { minIntensity: 1, maxIntensity: 10, priority: 1 },
-              movies: { minIntensity: 1, maxIntensity: 10, priority: 2 },
-            },
-          },
-        },
-      };
-
-      mockUserPreferencesService.findByUserId.mockResolvedValue(mockPreferences);
-
-      const result = await service.generateRecommendations(request);
-
-      expect(result).toBeDefined();
-      expect(result.length).toBeGreaterThan(0);
-      expect(result[0].confidence).toBeGreaterThan(0.5);
+      expect(moodHistoryService.analyzeMoodHistory).toHaveBeenCalledWith(
+        request.userId,
+        30,
+      );
     });
 
     it('should handle errors gracefully and return fallback recommendations', async () => {
@@ -100,27 +91,58 @@ describe('RecommendationService', () => {
         limit: 5,
       };
 
-      mockUserPreferencesService.findByUserId.mockRejectedValue(new Error('Database error'));
+      jest
+        .spyOn(moodHistoryService, 'analyzeMoodHistory')
+        .mockRejectedValue(new Error('Database error'));
 
       const result = await service.generateRecommendations(request);
 
       expect(result).toBeDefined();
       expect(result.length).toBeGreaterThan(0);
-      expect(result[0].confidence).toBe(0.5);
     });
   });
 
   describe('getRecommendationQualityMetrics', () => {
-    it('should return placeholder metrics', async () => {
+    it('should return metrics with mood history data', async () => {
+      const mockMoodAnalysis = {
+        totalEntries: 20,
+        dateRange: {
+          start: new Date('2024-01-01'),
+          end: new Date('2024-01-30'),
+        },
+        patterns: [
+          {
+            mood: 'happy',
+            frequency: 5,
+            averageIntensity: 6,
+            commonTriggers: ['good news'],
+            timeOfDay: 'Morning (6AM-12PM)',
+            dayOfWeek: 'Monday',
+            averageDuration: 90,
+          },
+        ],
+        trends: [
+          {
+            period: 'Period 1',
+            averageMood: 'happy',
+            moodStability: 0.7,
+            intensityTrend: 'stable' as const,
+            topMoods: [{ mood: 'happy', count: 5 }],
+          },
+        ],
+        recommendations: ['Keep up the positive mood'],
+      };
+
+      jest
+        .spyOn(moodHistoryService, 'analyzeMoodHistory')
+        .mockResolvedValue(mockMoodAnalysis);
+
       const result = await service.getRecommendationQualityMetrics(1);
 
-      expect(result).toEqual({
-        totalRecommendations: 0,
-        acceptedRecommendations: 0,
-        rejectedRecommendations: 0,
-        averageConfidence: 0,
-        userSatisfaction: 0,
-      });
+      expect(result).toBeDefined();
+      expect(result.totalMoodEntries).toBe(20);
+      expect(result.patternsIdentified).toBe(1);
+      expect(result.trendsAnalyzed).toBe(1);
     });
   });
 });
