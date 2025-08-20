@@ -69,6 +69,10 @@ async function bootstrap() {
       .addTag('Books', 'Book recommendations')
       .addTag('Movies', 'Movie recommendations')
       .addTag('Spotify', 'Spotify music and podcast recommendations')
+      .addTag(
+        'Saved Contents',
+        'User saved content operations (requires authentication)',
+      )
       .addTag('moods', 'User mood management (requires authentication)')
       .addTag(
         'mood-history',
@@ -79,8 +83,8 @@ async function bootstrap() {
         'Content recommendations based on mood and preferences',
       )
       .addTag(
-        'Saved Contents',
-        'User saved content operations (requires authentication)',
+        'interactions',
+        'Content interaction tracking and analysis (requires authentication)',
       )
       .addTag(
         'user-preferences',

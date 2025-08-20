@@ -13,6 +13,7 @@ import { AppConfigModule } from './config/config.module';
 import { AppConfigService } from './config/config.service';
 import { createDataSource } from './database/data-source';
 import { RecommendationModule } from './modules/recommendation/recommendation.module';
+import { InteractionsModule } from './modules/interactions/interactions.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { RecommendationModule } from './modules/recommendation/recommendation.mo
     UserModule,
     UserPreferencesModule,
     RecommendationModule,
+    InteractionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
