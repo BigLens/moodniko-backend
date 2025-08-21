@@ -21,7 +21,6 @@ describe('JwtAuthGuard', () => {
   });
 
   it('should have the correct strategy name', () => {
-    // The guard uses 'jwt' strategy as defined in the class
     expect(guard).toBeDefined();
   });
 });

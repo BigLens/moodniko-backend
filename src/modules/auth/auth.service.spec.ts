@@ -8,13 +8,11 @@ import { LoginDto } from './dto/login.dto';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { comparePassword, hashPassword } from '../user/utils/password.util';
 
-// Mock the password utility functions
 jest.mock('../user/utils/password.util', () => ({
   comparePassword: jest.fn(),
   hashPassword: jest.fn(),
 }));
 
-// Get the mocked functions with proper typing
 const mockedComparePassword = jest.mocked(comparePassword);
 const mockedHashPassword = jest.mocked(hashPassword);
 
@@ -144,7 +142,7 @@ describe('AuthService', () => {
     it('should successfully login with valid credentials', async () => {
       const mockUserWithHashedPassword = {
         ...mockUser,
-        password: '$2b$10$hashedPassword', // Mock hashed password
+        password: '$2b$10$hashedPassword',
       };
 
       mockUserService.findByEmail.mockResolvedValue(mockUserWithHashedPassword);
@@ -222,7 +220,6 @@ describe('AuthService', () => {
 
       mockUserService.createUser.mockResolvedValue(newUser);
 
-      // Mock the password hashing
       mockedHashPassword.mockResolvedValue('hashed-password-123');
 
       const result = await service.register(createUserDto);
@@ -237,7 +234,7 @@ describe('AuthService', () => {
 
       expect(userService.createUser).toHaveBeenCalledWith({
         email: createUserDto.email,
-        password: 'hashed-password-123', // Should be hashed
+        password: 'hashed-password-123',
       });
     });
 
