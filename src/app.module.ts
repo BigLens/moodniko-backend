@@ -1,5 +1,4 @@
 // app.module.ts
-//ignore lint errors
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MoodModule } from '@modules/mood/mood.module';
@@ -43,7 +42,7 @@ import { UserPreferencesEntity } from '@modules/user-preferences/entity/user-pre
           UserEntity,
           MoodEntity,
           UserPreferencesEntity,
-          UserContentInteractionEntity
+          UserContentInteractionEntity,
         ],
         namingStrategy: new SnakeNamingStrategy(),
         migrations: [],
