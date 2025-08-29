@@ -1,4 +1,5 @@
 // app.module.ts
+//ignore lint errors
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MoodModule } from '@modules/mood/mood.module';
