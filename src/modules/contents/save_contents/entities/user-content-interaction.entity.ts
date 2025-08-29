@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from '@modules/user/entity/user.entity';
 import { ContentEntity } from '@modules/contents/model/content.entity';
+import { BaseEntity } from '@entities/base-entity';
 
 export enum InteractionType {
   LIKE = 'like',
@@ -27,7 +28,7 @@ export enum InteractionType {
 @Index(['interactionType'])
 @Index(['createdAt'])
 @Index(['moodAtInteraction'])
-export class UserContentInteractionEntity {
+export class UserContentInteractionEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
