@@ -1,3 +1,4 @@
+// app.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MoodModule } from '@modules/mood/mood.module';
@@ -15,6 +16,13 @@ import { RecommendationModule } from './modules/recommendation/recommendation.mo
 import { InteractionsModule } from './modules/interactions/interactions.module';
 import { SnakeNamingStrategy } from '@utils/snake_snake';
 
+// Import all your entities
+import { ContentEntity } from '@modules/contents/model/content.entity';
+import { SavedContent } from '@modules/contents/save_contents/save-content.entity';
+import { UserEntity } from '@modules/user/entity/user.entity';
+import { MoodEntity } from '@modules/mood/entity/mood.entity';
+import { UserPreferencesEntity } from '@modules/user-preferences/entity/user-preferences.entity';
+
 @Module({
   imports: [
     AppConfigModule,
@@ -28,7 +36,14 @@ import { SnakeNamingStrategy } from '@utils/snake_snake';
         password: configService.databasePassword,
         database: configService.databaseName,
         synchronize: configService.databaseSynchronize,
-        autoLoadEntities: true,
+        entities: [
+          ContentEntity,
+          SavedContent,
+          UserEntity,
+          MoodEntity,
+          UserPreferencesEntity,
+          UserContentInteractionEntity
+        ],
         namingStrategy: new SnakeNamingStrategy(),
         migrations: [],
         migrationsTableName: configService.databaseMigrationsTableName,
