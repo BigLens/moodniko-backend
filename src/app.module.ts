@@ -11,19 +11,29 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppConfigModule } from './config/config.module';
 import { AppConfigService } from './config/config.service';
-import { createDataSource } from './database/data-source';
 import { RecommendationModule } from './modules/recommendation/recommendation.module';
 import { InteractionsModule } from './modules/interactions/interactions.module';
+import { SnakeNamingStrategy } from '@utils/snake_snake';
 
 @Module({
   imports: [
     AppConfigModule,
     TypeOrmModule.forRootAsync({
       imports: [AppConfigModule],
-      useFactory: async (configService: AppConfigService) => {
-        const dataSource = createDataSource(configService);
-        return dataSource.options;
-      },
+      useFactory: (configService: AppConfigService) => ({
+        type: configService.databaseType as any,
+        host: configService.databaseHost,
+        port: configService.databasePort,
+        username: configService.databaseUsername,
+        password: configService.databasePassword,
+        database: configService.databaseName,
+        synchronize: configService.databaseSynchronize,
+        autoLoadEntities: true,
+        namingStrategy: new SnakeNamingStrategy(),
+        migrations: [],
+        migrationsTableName: configService.databaseMigrationsTableName,
+        ssl: configService.databaseSSL,
+      }),
       inject: [AppConfigService],
     }),
     MoodModule,

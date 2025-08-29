@@ -1,6 +1,5 @@
 import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
-import { globSync } from 'glob';
 import { SnakeNamingStrategy } from '@utils/snake_snake';
 import { ContentEntity } from '@modules/contents/model/content.entity';
 import { SavedContent } from '@modules/contents/save_contents/save-content.entity';
@@ -27,10 +26,9 @@ export function createDataSource(configService: AppConfigService): DataSource {
       UserEntity,
       MoodEntity,
       UserPreferencesEntity,
-      ...(globSync(configService.databaseEntities) as any[]),
     ],
     namingStrategy: new SnakeNamingStrategy(),
-    migrations: globSync(configService.databaseMigrations),
+    migrations: [],
     migrationsTableName: configService.databaseMigrationsTableName,
     ssl: configService.databaseSSL,
   });
@@ -52,14 +50,9 @@ const dataSource = new DataSource({
     UserEntity,
     MoodEntity,
     UserPreferencesEntity,
-    ...(globSync(
-      process.env.DB_ENTITIES || 'src/**/*.entity.{ts,js}',
-    ) as any[]),
   ],
   namingStrategy: new SnakeNamingStrategy(),
-  migrations: globSync(
-    process.env.DB_MIGRATIONS || 'src/database/migrations/*.{ts,js}',
-  ),
+  migrations: [],
   migrationsTableName: 'migrations',
   ssl: process.env.DB_SSL === 'true',
 });
