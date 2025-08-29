@@ -42,7 +42,6 @@ import { UserPreferencesEntity } from '@modules/user-preferences/entity/user-pre
           UserEntity,
           MoodEntity,
           UserPreferencesEntity,
-          UserContentInteractionEntity,
         ],
         namingStrategy: new SnakeNamingStrategy(),
         migrations: [],
