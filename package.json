@@ -15,6 +15,7 @@
     "migration:generate": "npx typeorm migration:generate -d dist/src/database/data-source",
     "migration:revert": "npx typeorm migration:revert -d dist/src/database/data-source",
     "build": "nest build",
+    "render-build": "npm run build && npm run migration:run",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
