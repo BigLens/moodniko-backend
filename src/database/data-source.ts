@@ -10,7 +10,6 @@ import { AppConfigService } from '../config/config.service';
 
 config({ path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env' });
 
-// Create a function to get data source configuration
 export function createDataSource(configService: AppConfigService): DataSource {
   return new DataSource({
     type: configService.databaseType as any,
@@ -28,14 +27,12 @@ export function createDataSource(configService: AppConfigService): DataSource {
       UserPreferencesEntity,
     ],
     namingStrategy: new SnakeNamingStrategy(),
-    migrations: [],
+    migrations: [__dirname + '/migrations/*{.ts,.js}'],
     migrationsTableName: configService.databaseMigrationsTableName,
     ssl: configService.databaseSSL,
   });
 }
 
-// For backward compatibility, create a default data source
-// This will be used when the config service is not available (e.g., during migrations)
 const dataSource = new DataSource({
   type: (process.env.DB_TYPE as any) || 'postgres',
   host: process.env.DB_HOST,
@@ -52,7 +49,7 @@ const dataSource = new DataSource({
     UserPreferencesEntity,
   ],
   namingStrategy: new SnakeNamingStrategy(),
-  migrations: [],
+  migrations: [__dirname + '/migrations/*{.ts,.js}'],
   migrationsTableName: 'migrations',
   ssl: process.env.DB_SSL === 'true',
 });
