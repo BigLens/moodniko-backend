@@ -1,4 +1,3 @@
-// app.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MoodModule } from '@modules/mood/mood.module';
@@ -16,7 +15,6 @@ import { RecommendationModule } from './modules/recommendation/recommendation.mo
 import { InteractionsModule } from './modules/interactions/interactions.module';
 import { SnakeNamingStrategy } from '@utils/snake_snake';
 
-// Import all your entities
 import { ContentEntity } from '@modules/contents/model/content.entity';
 import { SavedContent } from '@modules/contents/save_contents/save-content.entity';
 import { UserEntity } from '@modules/user/entity/user.entity';
