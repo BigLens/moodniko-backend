@@ -13,7 +13,6 @@ export class MoodService {
   ) {}
 
   async createMood(dto: MoodDto, user: UserEntity): Promise<MoodEntity> {
-    console.log(user);
     const mood = this.moodRepo.create({
       feeling: dto.feeling,
       user,
