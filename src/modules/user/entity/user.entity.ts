@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { BaseEntity } from '@entities/base-entity';
 import { MoodEntity } from '@modules/mood/entity/mood.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity('users')
 @Unique(['email'])
@@ -17,6 +18,7 @@ export class UserEntity extends BaseEntity {
   @Column({ unique: true })
   email: string;
 
+  @Exclude()
   @Column()
   password: string;
 

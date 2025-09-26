@@ -60,6 +60,6 @@ export class MoodEntity extends BaseEntity {
   moodChangeReason: string;
 
   @ManyToOne(() => UserEntity, { nullable: false, onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 }

@@ -6,6 +6,8 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { Request, Response, NextFunction } from 'express';
 import { AppConfigService } from './config/config.service';
+import { ClassSerializerInterceptor } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -15,10 +17,8 @@ async function bootstrap() {
       logger: ['error', 'warn', 'log', 'debug', 'verbose'],
     });
 
-    // Get configuration service
     const configService = app.get(AppConfigService);
 
-    // Validate environment configuration
     logger.log('Validating environment configuration...');
     try {
       configService.validateEnvironment();
@@ -53,7 +53,10 @@ async function bootstrap() {
     );
 
     app.useGlobalFilters(new HttpExceptionFilter());
-    app.useGlobalInterceptors(new LoggingInterceptor());
+    app.useGlobalInterceptors(
+      new LoggingInterceptor(),
+      new ClassSerializerInterceptor(app.get(Reflector)),
+    );
     app.enableCors();
 
     const config = new DocumentBuilder()

@@ -8,7 +8,6 @@ import {
 import { BaseEntity } from '@entities/base-entity';
 import { UserEntity } from '@modules/user/entity/user.entity';
 
-// Mood preference interface for type safety
 export interface MoodPreference {
   intensityLevels: number[];
   preferredContentTypes: string[];
@@ -19,7 +18,6 @@ export interface MoodPreference {
   };
 }
 
-// Mood intensity settings interface
 export interface MoodIntensitySettings {
   minIntensity: number;
   maxIntensity: number;

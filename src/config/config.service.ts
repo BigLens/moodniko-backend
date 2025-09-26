@@ -5,7 +5,6 @@ import { ConfigService } from '@nestjs/config';
 export class AppConfigService {
   constructor(private configService: ConfigService) {}
 
-  // JWT Configuration
   get jwtSecret(): string {
     const secret = this.configService.get<string>('jwt.secret');
     if (!secret) {
@@ -18,7 +17,6 @@ export class AppConfigService {
     return this.configService.get<string>('jwt.expiresIn') || '24h';
   }
 
-  // Database Configuration
   get databaseType(): string {
     return this.configService.get<string>('database.type') || 'postgres';
   }
@@ -72,7 +70,6 @@ export class AppConfigService {
     );
   }
 
-  // App Configuration
   get port(): number {
     return this.configService.get<number>('app.port') || 4002;
   }
@@ -85,7 +82,6 @@ export class AppConfigService {
     return this.configService.get<string>('app.apiPrefix') || 'api';
   }
 
-  // Third Party Configuration
   get spotifyClientId(): string {
     return this.configService.get<string>('thirdParty.spotify.clientId') || '';
   }
@@ -106,7 +102,6 @@ export class AppConfigService {
     );
   }
 
-  // Environment validation
   validateEnvironment(): void {
     const requiredVars = [
       { key: 'JWT_SECRET', value: this.jwtSecret },

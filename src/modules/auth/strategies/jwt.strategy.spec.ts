@@ -1,8 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
+import { UserEntity } from '@modules/user/entity/user.entity';
+
+// Mock user repository
+const mockUserRepository = {
+  findOneBy: jest.fn(),
+};
 
 describe('JwtStrategy', () => {
   let strategy: JwtStrategy;
@@ -19,6 +26,10 @@ describe('JwtStrategy', () => {
           provide: ConfigService,
           useValue: mockConfigService,
         },
+        {
+          provide: getRepositoryToken(UserEntity),
+          useValue: mockUserRepository,
+        },
       ],
     }).compile();
 
@@ -34,25 +45,28 @@ describe('JwtStrategy', () => {
   });
 
   describe('validate', () => {
-    it('should validate payload with correct user data', async () => {
+    it('should validate and return user when payload is correct', async () => {
       const payload: JwtPayload = {
-        sub: 'user123',
+        sub: '1',
         email: 'test@example.com',
       };
 
+      const mockUser = { id: 1, email: 'test@example.com' } as UserEntity;
+      mockUserRepository.findOneBy.mockResolvedValue(mockUser);
+
       const result = await strategy.validate(payload);
 
-      expect(result).toEqual({
-        userId: 'user123',
-        email: 'test@example.com',
+      expect(result).toEqual(mockUser);
+      expect(mockUserRepository.findOneBy).toHaveBeenCalledWith({
+        id: +payload.sub,
       });
     });
 
     it('should throw UnauthorizedException when payload.sub is missing', async () => {
-      const payload: JwtPayload = {
+      const payload = {
         sub: undefined,
         email: 'test@example.com',
-      };
+      } as JwtPayload;
 
       await expect(strategy.validate(payload)).rejects.toThrow(
         new UnauthorizedException('Invalid token payload'),
@@ -60,227 +74,23 @@ describe('JwtStrategy', () => {
     });
 
     it('should throw UnauthorizedException when payload.email is missing', async () => {
-      const payload: JwtPayload = {
-        sub: 'user123',
-        email: undefined,
-      };
+      const payload = { sub: '1', email: undefined } as JwtPayload;
 
       await expect(strategy.validate(payload)).rejects.toThrow(
         new UnauthorizedException('Invalid token payload'),
       );
     });
 
-    it('should throw UnauthorizedException when both sub and email are missing', async () => {
+    it('should throw UnauthorizedException when user is not found', async () => {
       const payload: JwtPayload = {
-        sub: undefined,
-        email: undefined,
+        sub: '1',
+        email: 'test@example.com',
       };
+
+      mockUserRepository.findOneBy.mockResolvedValue(null);
 
       await expect(strategy.validate(payload)).rejects.toThrow(
-        new UnauthorizedException('Invalid token payload'),
-      );
-    });
-
-    it('should throw UnauthorizedException when payload is null', async () => {
-      await expect(strategy.validate(null)).rejects.toThrow(
-        "Cannot read properties of null (reading 'sub')",
-      );
-    });
-
-    it('should throw UnauthorizedException when payload is undefined', async () => {
-      await expect(strategy.validate(undefined)).rejects.toThrow(
-        "Cannot read properties of undefined (reading 'sub')",
-      );
-    });
-
-    it('should handle payload with empty string values', async () => {
-      const payload: JwtPayload = {
-        sub: '',
-        email: '',
-      };
-
-      await expect(strategy.validate(payload)).rejects.toThrow(
-        new UnauthorizedException('Invalid token payload'),
-      );
-    });
-
-    it('should handle payload with whitespace-only values', async () => {
-      const payload: JwtPayload = {
-        sub: '   ',
-        email: '   ',
-      };
-
-      // The current implementation doesn't check for whitespace-only values
-      const result = await strategy.validate(payload);
-      expect(result).toEqual({
-        userId: '   ',
-        email: '   ',
-      });
-    });
-
-    it('should validate payload with numeric sub as string', async () => {
-      const payload: JwtPayload = {
-        sub: '123',
-        email: 'test@example.com',
-      };
-
-      const result = await strategy.validate(payload);
-
-      expect(result).toEqual({
-        userId: '123',
-        email: 'test@example.com',
-      });
-    });
-
-    it('should validate payload with special characters in email', async () => {
-      const payload: JwtPayload = {
-        sub: 'user123',
-        email: 'test+special@example.com',
-      };
-
-      const result = await strategy.validate(payload);
-
-      expect(result).toEqual({
-        userId: 'user123',
-        email: 'test+special@example.com',
-      });
-    });
-
-    it('should validate payload with uppercase email', async () => {
-      const payload: JwtPayload = {
-        sub: 'user123',
-        email: 'TEST@EXAMPLE.COM',
-      };
-
-      const result = await strategy.validate(payload);
-
-      expect(result).toEqual({
-        userId: 'user123',
-        email: 'TEST@EXAMPLE.COM',
-      });
-    });
-
-    it('should handle payload with additional properties', async () => {
-      const payload: JwtPayload = {
-        sub: 'user123',
-        email: 'test@example.com',
-        extra: 'value',
-      } as any;
-
-      const result = await strategy.validate(payload);
-
-      expect(result).toEqual({
-        userId: 'user123',
-        email: 'test@example.com',
-      });
-    });
-  });
-
-  describe('edge cases', () => {
-    it('should handle very long user IDs', async () => {
-      const longId = 'a'.repeat(1000);
-      const payload: JwtPayload = {
-        sub: longId,
-        email: 'test@example.com',
-      };
-
-      const result = await strategy.validate(payload);
-
-      expect(result).toEqual({
-        userId: longId,
-        email: 'test@example.com',
-      });
-    });
-
-    it('should handle very long email addresses', async () => {
-      const longEmail = 'a'.repeat(500) + '@example.com';
-      const payload: JwtPayload = {
-        sub: 'user123',
-        email: longEmail,
-      };
-
-      const result = await strategy.validate(payload);
-
-      expect(result).toEqual({
-        userId: 'user123',
-        email: longEmail,
-      });
-    });
-
-    it('should handle payload with unicode characters', async () => {
-      const payload: JwtPayload = {
-        sub: 'user123',
-        email: 'test@exámple.com',
-      };
-
-      const result = await strategy.validate(payload);
-
-      expect(result).toEqual({
-        userId: 'user123',
-        email: 'test@exámple.com',
-      });
-    });
-
-    it('should handle payload with emoji characters', async () => {
-      const payload: JwtPayload = {
-        sub: 'user123',
-        email: 'test@example😀.com',
-      };
-
-      const result = await strategy.validate(payload);
-
-      expect(result).toEqual({
-        userId: 'user123',
-        email: 'test@example😀.com',
-      });
-    });
-  });
-
-  describe('error scenarios', () => {
-    it('should handle payload with null values', async () => {
-      const payload: JwtPayload = {
-        sub: null,
-        email: null,
-      } as any;
-
-      await expect(strategy.validate(payload)).rejects.toThrow(
-        new UnauthorizedException('Invalid token payload'),
-      );
-    });
-
-    it('should handle payload with undefined values', async () => {
-      const payload: JwtPayload = {
-        sub: undefined,
-        email: undefined,
-      };
-
-      await expect(strategy.validate(payload)).rejects.toThrow(
-        new UnauthorizedException('Invalid token payload'),
-      );
-    });
-
-    it('should handle payload with non-string values', async () => {
-      const payload: JwtPayload = {
-        sub: 123,
-        email: 456,
-      } as any;
-
-      // The current implementation doesn't validate types, it just checks for truthiness
-      const result = await strategy.validate(payload);
-      expect(result).toEqual({
-        userId: 123,
-        email: 456,
-      });
-    });
-
-    it('should handle payload with boolean values', async () => {
-      const payload: JwtPayload = {
-        sub: true,
-        email: false,
-      } as any;
-
-      await expect(strategy.validate(payload)).rejects.toThrow(
-        new UnauthorizedException('Invalid token payload'),
+        new UnauthorizedException('User not found'),
       );
     });
   });

@@ -7,6 +7,8 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UserModule } from '@modules/user/user.module';
+import { UserEntity } from '@modules/user/entity/user.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { UserModule } from '@modules/user/user.module';
       }),
       inject: [ConfigService],
     }),
+    TypeOrmModule.forFeature([UserEntity]),
     UserModule,
   ],
   controllers: [AuthController],
