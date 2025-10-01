@@ -10,6 +10,7 @@ import { ContentEntity } from '../model/content.entity';
 import { CreateSavedContentDto } from './dto/create-saved-content.dto';
 import { GetSavedContentsQueryDto } from './dto/get-saved-contents-query.dto';
 
+
 @Injectable()
 export class SaveContentService {
   constructor(
@@ -24,12 +25,7 @@ export class SaveContentService {
     userId: number,
   ): Promise<SavedContent> {
     const { contentId, mood } = createSavedContentDto;
-    // Validate mood length - this is now handled by the enum, but we can keep it as a safeguard
-    if (mood.length > 50) {
-      throw new BadRequestException('Mood must be 50 characters or less');
-    }
 
-    // Check if content exists
     const content = await this.contentRepository.findOne({
       where: { id: contentId },
     });

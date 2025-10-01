@@ -17,11 +17,8 @@ export class AuthService {
     private userService: UserService,
   ) {}
 
-  generateToken(userId: string, email: string): string {
-    const payload: JwtPayload = {
-      sub: userId,
-      email: email,
-    };
+  generateToken(userId: number, email: string): string {
+    const payload: JwtPayload = { sub: userId, email };
     return this.jwtService.sign(payload);
   }
 
@@ -34,7 +31,7 @@ export class AuthService {
     if (!isValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    const accessToken = this.generateToken(user.id.toString(), user.email);
+    const accessToken = this.generateToken(user.id, user.email);
     return {
       accessToken,
       user: {
@@ -50,7 +47,7 @@ export class AuthService {
       ...createUserDto,
       password: hashedPassword,
     });
-    const accessToken = this.generateToken(user.id.toString(), user.email);
+    const accessToken = this.generateToken(user.id, user.email);
     return {
       accessToken,
       user: {

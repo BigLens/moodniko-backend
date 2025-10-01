@@ -21,16 +21,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload): Promise<UserEntity> {
+  async validate(payload: JwtPayload) {
     if (!payload.sub || !payload.email) {
       throw new UnauthorizedException('Invalid token payload');
     }
-    const user = await this.userRepository.findOneBy({ id: +payload.sub });
 
-    if (!user) {
-      throw new UnauthorizedException('User not found');
-    }
-
-    return user;
+    return {userId: payload.sub, email: payload.email};
   }
 }

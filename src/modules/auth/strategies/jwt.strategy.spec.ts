@@ -47,7 +47,7 @@ describe('JwtStrategy', () => {
   describe('validate', () => {
     it('should validate and return user when payload is correct', async () => {
       const payload: JwtPayload = {
-        sub: '1',
+        sub: 1,
         email: 'test@example.com',
       };
 
@@ -74,7 +74,7 @@ describe('JwtStrategy', () => {
     });
 
     it('should throw UnauthorizedException when payload.email is missing', async () => {
-      const payload = { sub: '1', email: undefined } as JwtPayload;
+      const payload = { sub: 1, email: undefined } as JwtPayload;
 
       await expect(strategy.validate(payload)).rejects.toThrow(
         new UnauthorizedException('Invalid token payload'),
@@ -83,7 +83,7 @@ describe('JwtStrategy', () => {
 
     it('should throw UnauthorizedException when user is not found', async () => {
       const payload: JwtPayload = {
-        sub: '1',
+        sub: 1,
         email: 'test@example.com',
       };
 

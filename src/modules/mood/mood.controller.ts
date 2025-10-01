@@ -32,7 +32,7 @@ export class MoodController {
   @Post('create-mood')
   @CreateMoodDocs()
   async createMood(@Body() dto: MoodDto, @Request() req) {
-    return this.moodService.createMood(dto, req.user);
+    return this.moodService.createMood(dto, req.user.userId);
   }
 
   @Get()
