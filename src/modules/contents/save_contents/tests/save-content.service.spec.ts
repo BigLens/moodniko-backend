@@ -100,8 +100,9 @@ describe('SaveContentService', () => {
         ...createSavedContentDto,
         mood: 'a'.repeat(51) as Mood,
       };
+
       await expect(service.saveContent(longMoodDto, 1)).rejects.toThrow(
-        BadRequestException,
+        new BadRequestException('Mood cannot exceed 50 characters'),
       );
     });
 

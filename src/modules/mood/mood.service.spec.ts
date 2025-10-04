@@ -62,10 +62,10 @@ describe('MoodService', () => {
   });
 
   it('should create a mood', async () => {
-    const result = await service.createMood({ feeling: 'Happy' }, mockUser);
+    const result = await service.createMood({ feeling: 'Happy' }, 1);
     expect(repo.create).toHaveBeenCalledWith({
       feeling: 'Happy',
-      user: mockUser,
+      user: { id: 1 },
     });
     expect(repo.save).toHaveBeenCalled();
     expect(result).toEqual(mockMood);

@@ -23,9 +23,7 @@ describe('AuthService', () => {
 
   const mockJwtService = {
     sign: jest.fn().mockReturnValue('mock.jwt.token'),
-    decode: jest
-      .fn()
-      .mockReturnValue({ sub: 'user123', email: 'test@example.com' }),
+    decode: jest.fn().mockReturnValue({ sub: 123, email: 'test@example.com' }),
   };
 
   const mockUserService = {
@@ -73,7 +71,7 @@ describe('AuthService', () => {
 
   describe('generateToken', () => {
     it('should generate a JWT token with correct payload', () => {
-      const userId = 'user123';
+      const userId = 123;
       const email = 'test@example.com';
       const expectedToken = 'mock.jwt.token';
 
@@ -90,8 +88,8 @@ describe('AuthService', () => {
     });
 
     it('should generate different tokens for different users', () => {
-      const user1 = { userId: 'user1', email: 'user1@example.com' };
-      const user2 = { userId: 'user2', email: 'user2@example.com' };
+      const user1 = { userId: 1, email: 'user1@example.com' };
+      const user2 = { userId: 2, email: 'user2@example.com' };
 
       mockJwtService.sign
         .mockReturnValueOnce('token1')
@@ -110,7 +108,7 @@ describe('AuthService', () => {
     it('should decode a JWT token', () => {
       const token = 'mock.jwt.token';
       const expectedPayload = {
-        sub: 'user123',
+        sub: 123,
         email: 'test@example.com',
       };
 
@@ -161,7 +159,7 @@ describe('AuthService', () => {
       });
       expect(userService.findByEmail).toHaveBeenCalledWith(loginDto.email);
       expect(jwtService.sign).toHaveBeenCalledWith({
-        sub: mockUser.id.toString(),
+        sub: mockUser.id,
         email: mockUser.email,
       });
     });
@@ -254,9 +252,9 @@ describe('AuthService', () => {
         throw new Error('JWT signing failed');
       });
 
-      expect(() =>
-        service.generateToken('user123', 'test@example.com'),
-      ).toThrow('JWT signing failed');
+      expect(() => service.generateToken(123, 'test@example.com')).toThrow(
+        'JWT signing failed',
+      );
     });
 
     it('should handle user service errors in login', async () => {

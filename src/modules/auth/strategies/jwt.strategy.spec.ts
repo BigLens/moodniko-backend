@@ -45,21 +45,19 @@ describe('JwtStrategy', () => {
   });
 
   describe('validate', () => {
-    it('should validate and return user when payload is correct', async () => {
+    it('should validate and return user payload when payload is correct', async () => {
       const payload: JwtPayload = {
         sub: 1,
         email: 'test@example.com',
       };
 
-      const mockUser = { id: 1, email: 'test@example.com' } as UserEntity;
-      mockUserRepository.findOneBy.mockResolvedValue(mockUser);
+      const expectedResult = { userId: 1, email: 'test@example.com' };
 
       const result = await strategy.validate(payload);
 
-      expect(result).toEqual(mockUser);
-      expect(mockUserRepository.findOneBy).toHaveBeenCalledWith({
-        id: +payload.sub,
-      });
+      expect(result).toEqual(expectedResult);
+      // JWT strategy doesn't fetch from DB, just returns payload
+      expect(mockUserRepository.findOneBy).not.toHaveBeenCalled();
     });
 
     it('should throw UnauthorizedException when payload.sub is missing', async () => {
@@ -78,19 +76,6 @@ describe('JwtStrategy', () => {
 
       await expect(strategy.validate(payload)).rejects.toThrow(
         new UnauthorizedException('Invalid token payload'),
-      );
-    });
-
-    it('should throw UnauthorizedException when user is not found', async () => {
-      const payload: JwtPayload = {
-        sub: 1,
-        email: 'test@example.com',
-      };
-
-      mockUserRepository.findOneBy.mockResolvedValue(null);
-
-      await expect(strategy.validate(payload)).rejects.toThrow(
-        new UnauthorizedException('User not found'),
       );
     });
   });
