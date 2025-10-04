@@ -11,19 +11,7 @@ import {
 import { UserEntity } from '@modules/user/entity/user.entity';
 import { ContentEntity } from '@modules/contents/model/content.entity';
 import { BaseEntity } from '@entities/base-entity';
-// import { InteractionType } from './../enum/interactiontype.enum';
-
-
-export enum InteractionType {
-  LIKE = 'like',
-  DISLIKE = 'dislike',
-  SAVE = 'save',
-  SHARE = 'share',
-  SKIP = 'skip',
-  PLAY = 'play',
-  COMPLETE = 'complete',
-  RATE = 'rate',
-}
+import { InteractionType } from '../enum/interaction-type.enum';
 
 @Entity('user_content_interactions')
 @Index(['userId', 'contentId'])

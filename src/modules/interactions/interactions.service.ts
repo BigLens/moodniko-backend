@@ -6,10 +6,8 @@ import {
   InteractionAnalysis,
   InteractionPattern,
 } from './interfaces/interactions.interface';
-import {
-  UserContentInteractionEntity,
-  InteractionType,
-} from '@modules/contents/save_contents/entities/user-content-interaction.entity';
+import { UserContentInteractionEntity } from '@modules/contents/save_contents/entities/user-content-interaction.entity';
+import { InteractionType } from '@modules/contents/save_contents/enum/interaction-type.enum';
 
 @Injectable()
 export class InteractionsService {

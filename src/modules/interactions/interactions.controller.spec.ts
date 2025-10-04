@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { InteractionsController } from './interactions.controller';
 import { InteractionsService } from './interactions.service';
-import { InteractionType } from '@modules/contents/save_contents/entities/user-content-interaction.entity';
+import { InteractionType } from '@modules/contents/save_contents/enum/interaction-type.enum';
 
 describe('InteractionsController', () => {
   let controller: InteractionsController;

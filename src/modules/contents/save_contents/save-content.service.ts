@@ -10,7 +10,6 @@ import { ContentEntity } from '../model/content.entity';
 import { CreateSavedContentDto } from './dto/create-saved-content.dto';
 import { GetSavedContentsQueryDto } from './dto/get-saved-contents-query.dto';
 
-
 @Injectable()
 export class SaveContentService {
   constructor(
@@ -26,6 +25,11 @@ export class SaveContentService {
   ): Promise<SavedContent> {
     const { contentId, mood } = createSavedContentDto;
 
+    // Validate mood length
+    if (mood && mood.length > 50) {
+      throw new BadRequestException('Mood cannot exceed 50 characters');
+    }
+
     const content = await this.contentRepository.findOne({
       where: { id: contentId },
     });
@@ -33,7 +37,6 @@ export class SaveContentService {
       throw new NotFoundException('Content not found');
     }
 
-    // Check if already saved with same mood for this user
     const existingSave = await this.savedContentRepository.findOne({
       where: { contentId, mood, userId },
     });
@@ -42,7 +45,6 @@ export class SaveContentService {
       throw new BadRequestException('Content already saved with this mood');
     }
 
-    // Create new saved content
     const savedContent = this.savedContentRepository.create({
       contentId,
       mood,

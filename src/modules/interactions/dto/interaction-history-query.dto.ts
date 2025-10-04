@@ -7,7 +7,7 @@ import {
   Max,
 } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { InteractionType } from '../interfaces/interactions.interface';
+import { InteractionType } from '@modules/contents/save_contents/enum/interaction-type.enum';
 
 export class InteractionHistoryQueryDto {
   @ApiPropertyOptional({

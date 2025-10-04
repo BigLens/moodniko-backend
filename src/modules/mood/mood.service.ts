@@ -15,7 +15,7 @@ export class MoodService {
   async createMood(dto: MoodDto, userId: number): Promise<MoodEntity> {
     const mood = this.moodRepo.create({
       feeling: dto.feeling,
-      user: { id: userId }
+      user: { id: userId },
     });
     return await this.moodRepo.save(mood);
   }

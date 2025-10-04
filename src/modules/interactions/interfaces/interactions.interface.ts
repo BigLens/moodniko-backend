@@ -1,13 +1,6 @@
-export enum InteractionType {
-  LIKE = 'like',
-  DISLIKE = 'dislike',
-  SAVE = 'save',
-  SHARE = 'share',
-  SKIP = 'skip',
-  PLAY = 'play',
-  COMPLETE = 'complete',
-  RATE = 'rate',
-}
+import { InteractionType } from '@modules/contents/save_contents/enum/interaction-type.enum';
+
+export { InteractionType };
 
 export interface TrackInteractionDto {
   userId: number;

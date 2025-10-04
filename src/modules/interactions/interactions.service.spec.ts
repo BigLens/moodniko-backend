@@ -1,10 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { InteractionsService } from './interactions.service';
-import {
-  UserContentInteractionEntity,
-  InteractionType,
-} from '@modules/contents/save_contents/entities/user-content-interaction.entity';
+import { UserContentInteractionEntity } from '@modules/contents/save_contents/entities/user-content-interaction.entity';
+import { InteractionType } from '@modules/contents/save_contents/enum/interaction-type.enum';
 
 describe('InteractionsService', () => {
   let service: InteractionsService;
