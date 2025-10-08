@@ -11,7 +11,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "migration:create": "npx typeorm migration:create ./src/database/migrations",
-    "migration:run": "npx typeorm migration:run -d dist/src/database/data-source.js",
+    "migration:run": "npx typeorm migration:run -d dist/database/data-source.js",
     "migration:generate": "npx typeorm migration:generate ./src/database/migrations -d dist/database/data-source.js",
     "migration:revert": "npx typeorm migration:revert -d dist/database/data-source.js",
     "build": "nest build",
