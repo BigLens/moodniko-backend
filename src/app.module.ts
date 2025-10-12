@@ -24,32 +24,34 @@ import { UserPreferencesEntity } from '@modules/user-preferences/entity/user-pre
 @Module({
   imports: [
     AppConfigModule,
-    ...(process.env.DB_HOST && process.env.DB_NAME ? [TypeOrmModule.forRootAsync({
-      imports: [AppConfigModule],
-      useFactory: (configService: AppConfigService) => ({
-        type: configService.databaseType as any,
-        host: configService.databaseHost,
-        port: configService.databasePort,
-        username: configService.databaseUsername,
-        password: configService.databasePassword,
-        database: configService.databaseName,
-        synchronize: configService.databaseSynchronize,
-        entities: [
-          ContentEntity,
-          SavedContent,
-          UserEntity,
-          MoodEntity,
-          UserPreferencesEntity,
-        ],
-        namingStrategy: new SnakeNamingStrategy(),
-        migrations: [],
-        migrationsTableName: configService.databaseMigrationsTableName,
-        ssl: configService.databaseSSL,
-      }),
-      inject: [AppConfigService],
-    }),
-  ] 
-  : []),
+    ...(process.env.DB_HOST && process.env.DB_NAME
+      ? [
+          TypeOrmModule.forRootAsync({
+            imports: [AppConfigModule],
+            useFactory: (configService: AppConfigService) => ({
+              type: configService.databaseType as any,
+              host: configService.databaseHost,
+              port: configService.databasePort,
+              username: configService.databaseUsername,
+              password: configService.databasePassword,
+              database: configService.databaseName,
+              synchronize: configService.databaseSynchronize,
+              entities: [
+                ContentEntity,
+                SavedContent,
+                UserEntity,
+                MoodEntity,
+                UserPreferencesEntity,
+              ],
+              namingStrategy: new SnakeNamingStrategy(),
+              migrations: [],
+              migrationsTableName: configService.databaseMigrationsTableName,
+              ssl: configService.databaseSSL,
+            }),
+            inject: [AppConfigService],
+          }),
+        ]
+      : []),
     MoodModule,
     ContentsModule,
     MoviesModule,
