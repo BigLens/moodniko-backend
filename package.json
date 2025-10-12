@@ -15,6 +15,7 @@
     "migration:generate": "npx typeorm migration:generate ./src/database/migrations -d dist/database/data-source.js",
     "migration:revert": "npx typeorm migration:revert -d dist/database/data-source.js",
     "build": "nest build",
+     "render-build": "npm run build && if [ -n \"$DB_HOST\" ]; then npm run migration:run; else echo 'Skipping migration: no DB connection'; fi",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
