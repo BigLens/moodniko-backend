@@ -24,7 +24,7 @@ import { UserPreferencesEntity } from '@modules/user-preferences/entity/user-pre
 @Module({
   imports: [
     AppConfigModule,
-    TypeOrmModule.forRootAsync({
+    ...(process.env.DB_HOST && process.env.DB_NAME ? [TypeOrmModule.forRootAsync({
       imports: [AppConfigModule],
       useFactory: (configService: AppConfigService) => ({
         type: configService.databaseType as any,
@@ -48,6 +48,8 @@ import { UserPreferencesEntity } from '@modules/user-preferences/entity/user-pre
       }),
       inject: [AppConfigService],
     }),
+  ] 
+  : []),
     MoodModule,
     ContentsModule,
     MoviesModule,
