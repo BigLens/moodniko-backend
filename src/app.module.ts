@@ -1,6 +1,5 @@
-import { Module, Logger } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
 import { MoodModule } from '@modules/mood/mood.module';
 import { ContentsModule } from '@modules/contents/contents.module';
 import { MoviesModule } from '@modules/contents/providers/movies/movies.module';
@@ -46,22 +45,8 @@ import { UserPreferencesEntity } from '@modules/user-preferences/entity/user-pre
         migrations: [],
         migrationsTableName: configService.databaseMigrationsTableName,
         ssl: configService.databaseSSL,
-        retryAttempts: 0,
       }),
       inject: [AppConfigService],
-      dataSourceFactory: async (options) => {
-        const logger = new Logger('TypeORM');
-        const dataSource = new DataSource(options as any);
-        try {
-          await dataSource.initialize();
-          logger.log('Database connection established');
-        } catch (err: any) {
-          logger.warn(
-            `Database connection failed: ${err?.message}. App will start without database.`,
-          );
-        }
-        return dataSource;
-      },
     }),
 
     MoodModule,
