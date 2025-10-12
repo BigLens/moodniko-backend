@@ -33,13 +33,44 @@ export function createDataSource(configService: AppConfigService): DataSource {
   });
 }
 
-const dataSource = new DataSource({
+function parseDatabaseUrl(databaseUrl: string) {
+  const url = new URL(databaseUrl);
+  return {
+    host: url.hostname,
+    port: parseInt(url.port || '5432', 10),
+    username: decodeURIComponent(url.username),
+    password: decodeURIComponent(url.password),
+    database: url.pathname.slice(1),
+  };
+}
+
+let dbConfig: any = {
   type: (process.env.DB_TYPE as any) || 'postgres',
-  host: process.env.DB_HOST,
-  port: +process.env.DB_PORT!,
+  host: process.env.DB_HOST || 'localhost',
+  port: +(process.env.DB_PORT || 5432),
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+  ssl: process.env.DB_SSL === 'true' || process.env.DATABASE_SSL === 'true',
+};
+
+if (process.env.DATABASE_URL) {
+  const parsed = parseDatabaseUrl(process.env.DATABASE_URL);
+  dbConfig = {
+    ...dbConfig,
+    host: parsed.host,
+    port: parsed.port,
+    username: parsed.username,
+    password: parsed.password,
+    database: parsed.database,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  };
+}
+
+const dataSource = new DataSource({
+  ...dbConfig,
   synchronize: false,
   entities: [
     ContentEntity,
@@ -51,16 +82,9 @@ const dataSource = new DataSource({
   namingStrategy: new SnakeNamingStrategy(),
   migrations: [__dirname + '/migrations/*{.ts,.js}'],
   migrationsTableName: 'migrations',
-  ssl: process.env.DB_SSL === 'true',
 });
 
 export async function dataSourceInit() {
-  if (!process.env.DB_HOST || !process.env.DB_NAME) {
-    console.warn(
-      '⚠️ Database connection skipped: missing DB_HOST or DB_NAME environment variables.',
-    );
-    return null;
-  }
   if (!dataSource.isInitialized) {
     await dataSource.initialize();
   }
