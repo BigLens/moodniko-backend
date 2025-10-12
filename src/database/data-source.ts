@@ -55,6 +55,12 @@ const dataSource = new DataSource({
 });
 
 export async function dataSourceInit() {
+  if (!process.env.DB_HOST || !process.env.DB_NAME) {
+    console.warn(
+      '⚠️ Database connection skipped: missing DB_HOST or DB_NAME environment variables.',
+    );
+    return null;
+  }
   if (!dataSource.isInitialized) {
     await dataSource.initialize();
   }
