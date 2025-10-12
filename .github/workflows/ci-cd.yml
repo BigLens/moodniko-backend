@@ -10,7 +10,6 @@ env:
   NODE_VERSION: '20'
 
 jobs:
-  # Development Branch - Basic checks
   dev-checks:
     if: github.ref == 'refs/heads/dev' || github.event_name == 'pull_request' && github.base_ref == 'dev'
     runs-on: ubuntu-latest
@@ -37,7 +36,6 @@ jobs:
       - name: Run tests
         run: npm run test
 
-  # Main Branch - Full checks + staging validation
   main-checks:
     if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request' && github.base_ref == 'main'
     runs-on: ubuntu-latest
@@ -86,7 +84,6 @@ jobs:
             exit 1
           fi
 
-  # Production Branch - Full checks + deployment readiness
   production-checks:
     if: github.ref == 'refs/heads/production' || github.event_name == 'pull_request' && github.base_ref == 'production'
     runs-on: ubuntu-latest
@@ -155,7 +152,6 @@ jobs:
             echo "No migrations directory found"
           fi
 
-  # Deployment readiness check for production
   deployment-check:
     if: github.ref == 'refs/heads/production' && github.event_name == 'push'
     runs-on: ubuntu-latest
